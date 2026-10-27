@@ -1,0 +1,3 @@
+# Store text with LF everywhere so Windows and CI agree (Prettier uses LF too).
+* text=auto eol=lf
+*.cmd text eol=crlf
