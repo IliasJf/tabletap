@@ -4,6 +4,7 @@ import Restaurant from "../app/components/Restaurant";
 import AdminPage from "../app/admin/page";
 import QrPage from "../app/qr/page";
 import Credits from "../app/credits/page";
+import Privacy from "../app/privacy/page";
 
 const path = window.location.pathname;
 const screen =
@@ -13,6 +14,8 @@ const screen =
     <QrPage />
   ) : path === "/credits" ? (
     <Credits />
+  ) : path === "/privacy" ? (
+    <Privacy />
   ) : (
     <Restaurant menuOnly={path === "/menu"} />
   );

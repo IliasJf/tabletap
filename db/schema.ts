@@ -64,3 +64,10 @@ export const sessions = sqliteTable(
   },
   (table) => [index("sessions_user_idx").on(table.userId)],
 );
+
+/** Request counters for spam limits; keys hold hashes, never raw IPs or emails. */
+export const rateLimits = sqliteTable("rate_limits", {
+  key: text("key").primaryKey(),
+  windowStart: integer("window_start").notNull(),
+  count: integer("count").notNull(),
+});

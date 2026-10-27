@@ -20,6 +20,7 @@ Open **http://127.0.0.1:5173**. On Windows, you can also double-click `Start-Tab
 - `/admin` — menu editor, menu sections, orders, restaurant details, and QR codes
 - `/qr` — try the QR card generator without signing in
 - `/credits` — photography and font credits
+- `/privacy` — what TableTap keeps, why, and for how long
 
 The local preview includes SQLite persistence. Owners sign in on `/admin` with their email and a 6-digit code. Locally, unless `RESEND_API_KEY` and `EMAIL_FROM` are set, the code is shown on screen and printed in the terminal instead of being emailed. The preview is deliberately bound to loopback and must never be exposed as a public production server. Hosted production uses Cloudflare D1.
 
@@ -39,6 +40,8 @@ The local preview includes SQLite persistence. Owners sign in on `/admin` with t
 - Server-side validation, authenticated ownership, bounded request bodies, and optimistic revision checks.
 - Passwordless email sign-in: a 6-digit code (10-minute expiry, 5 tries, 1-minute resend wait), hashed codes and session tokens, and 30-day HttpOnly sessions.
 - Order statuses (new, preparing, done, cancelled) with an Orders screen that refreshes every 30 seconds.
+- Spam limits: 20 orders per connection every 10 minutes, 10 sign-in codes per email per day, and caps on sign-in requests and guesses per connection. Only hashed IP addresses are stored, for at most a day.
+- A privacy page (`/privacy`, in English, French and Arabic) and a note at checkout explaining what is kept.
 - A readable menu link for each restaurant (`/menu?shop=olive-and-ember`), with optional `table=5` preselection. Links printed with the owner ID keep working.
 - Downloadable QR SVGs and a print layout for table cards.
 
@@ -81,7 +84,7 @@ npm run build:preview
 
 The test suite covers totals and extras, cart tampering, unavailable items, multilingual URL encoding, order validation, owner selection, origin checks, malformed/oversized writes, SQLite persistence, and stale revision conflicts. A GitHub Actions workflow that runs these checks on Node 24 is kept at `docs/ci-workflow.yml`; to turn it on, copy it to `.github/workflows/ci.yml` (on GitHub: **Add file → Create new file**).
 
-The local preview build, type check, and automated tests (27 at the latest update) were verified during development. Browser checks covered desktop/mobile layouts, Arabic RTL, customized checkout, delivery totals, owner sign-in, saved menus, and table-specific QR generation. See `docs/VERIFICATION.md` for the exact limits.
+The local preview build, type check, and automated tests (29 at the latest update) were verified during development. Browser checks covered desktop/mobile layouts, Arabic RTL, customized checkout, delivery totals, owner sign-in, saved menus, and table-specific QR generation. See `docs/VERIFICATION.md` for the exact limits.
 
 ## Production deployment
 

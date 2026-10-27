@@ -14,7 +14,7 @@
     "db:generate": "drizzle-kit generate",
     "preview:local": "node scripts/preview.mjs",
     "typecheck": "tsc --noEmit --incremental false",
-    "test": "node --experimental-strip-types --test --test-isolation=none tests/cart.test.mjs tests/access.test.mjs tests/server.test.mjs tests/features.test.mjs tests/auth.test.mjs",
+    "test": "node --experimental-strip-types --test --test-isolation=none tests/cart.test.mjs tests/access.test.mjs tests/server.test.mjs tests/features.test.mjs tests/auth.test.mjs tests/rate-limit.test.mjs",
     "build:preview": "node scripts/build-preview.mjs"
   },
   "dependencies": {

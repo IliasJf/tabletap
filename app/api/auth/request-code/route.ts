@@ -6,8 +6,14 @@ import {
   readBoundedJson,
   routeError,
 } from "../../../../lib/api-security";
-import { createSignInCode, sendCodeWithResend } from "../../../../lib/auth";
+import {
+  createSignInCode,
+  normalizeEmail,
+  sendCodeWithResend,
+} from "../../../../lib/auth";
 import { d1AuthStore } from "../../../../lib/auth-store";
+import { enforceLimit } from "../../../../lib/rate-limit";
+import { clientIp, d1RateLimitStore } from "../../../../lib/rate-limit-store";
 
 export const dynamic = "force-dynamic";
 
@@ -21,11 +27,16 @@ export async function POST(request: Request) {
         "Email sign-in isn't set up yet. The site owner needs to add RESEND_API_KEY and EMAIL_FROM.",
         503,
       );
-    const store = d1AuthStore();
-    const { email, code } = await createSignInCode(
-      store,
-      await readBoundedJson(request, 1_000),
+    const limits = d1RateLimitStore();
+    await enforceLimit(limits, "codePerIp", clientIp(request));
+    const body = await readBoundedJson(request, 1_000);
+    await enforceLimit(
+      limits,
+      "codePerEmail",
+      normalizeEmail((body as { email?: unknown } | null)?.email),
     );
+    const store = d1AuthStore();
+    const { email, code } = await createSignInCode(store, body);
     if (!configured) return jsonResponse({ sent: true, devCode: code });
     try {
       await sendCodeWithResend(

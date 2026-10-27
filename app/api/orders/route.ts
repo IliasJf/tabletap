@@ -8,6 +8,8 @@ import {
 import { readPublicCatalog } from "../../../lib/catalog-store";
 import { saveOrder } from "../../../lib/order-store";
 import { OrderValidationError, buildOrderRecord } from "../../../lib/orders";
+import { enforceLimit } from "../../../lib/rate-limit";
+import { clientIp, d1RateLimitStore } from "../../../lib/rate-limit-store";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +17,7 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
+    await enforceLimit(d1RateLimitStore(), "orderPerIp", clientIp(request));
     const body = await readBoundedJson(request, 20_000);
     const shop = (body as { shop?: unknown } | null)?.shop;
     if (typeof shop !== "string" || !shop || shop.length > 200)

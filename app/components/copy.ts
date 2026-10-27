@@ -65,6 +65,9 @@ export const copy = {
     orderType: "How would you like your order?",
     message: "Your WhatsApp message",
     menuLoading: "Loading your menu…",
+    privacy: "Privacy",
+    privacyNote:
+      "Your name and order details go to {restaurant} and are kept in its order list.",
   },
   fr: {
     menu: "La carte",
@@ -132,6 +135,9 @@ export const copy = {
     orderType: "Comment souhaitez-vous commander ?",
     message: "Votre message WhatsApp",
     menuLoading: "Chargement de la carte…",
+    privacy: "Confidentialité",
+    privacyNote:
+      "Votre nom et votre commande sont transmis à {restaurant} et conservés dans sa liste de commandes.",
   },
   ar: {
     menu: "قائمتنا",
@@ -197,5 +203,8 @@ export const copy = {
     orderType: "كيف تفضل استلام طلبك؟",
     message: "رسالتك على واتساب",
     menuLoading: "جاري تحميل القائمة…",
+    privacy: "الخصوصية",
+    privacyNote:
+      "يتم إرسال اسمك وتفاصيل طلبك إلى {restaurant} وحفظها في قائمة طلباته.",
   },
 } as const;

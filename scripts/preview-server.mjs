@@ -41,10 +41,12 @@ import {
   createSignInCode,
   endSession,
   getSessionUser,
+  normalizeEmail,
   sendCodeWithResend,
   sessionCookie,
   verifySignInCode,
 } from "../lib/auth.ts";
+import { RATE_LIMIT_HIT_SQL, enforceLimit } from "../lib/rate-limit.ts";
 
 /** Sign-in storage on node:sqlite, matching lib/auth-store.ts on D1. */
 function sqliteAuthStore(db) {
@@ -142,6 +144,10 @@ export async function createPreviewServer({
     db.exec(`PRAGMA user_version=${entry.idx + 1}`);
   }
   const authStore = sqliteAuthStore(db);
+  const limits = {
+    hit: (key, windowStart) =>
+      db.prepare(RATE_LIMIT_HIT_SQL).get(key, windowStart).count,
+  };
   // Real email when Resend is configured; otherwise the code is shown on screen.
   const resend =
     process.env.RESEND_API_KEY && process.env.EMAIL_FROM
@@ -205,17 +211,22 @@ export async function createPreviewServer({
       const origin = `http://${req.headers.host}`,
         url = new URL(req.url, origin),
         user = await getSessionUser(authStore, req.headers.cookie ?? null),
-        signed = Boolean(user);
+        signed = Boolean(user),
+        ip = req.socket.remoteAddress ?? "unknown";
       if (url.pathname.startsWith("/api/auth/")) {
         if (req.method !== "POST")
           throw new ApiError("Method not allowed.", 405);
         const request = webRequest(req, url);
         assertSameOrigin(request);
         if (url.pathname === "/api/auth/request-code") {
-          const { email, code } = await createSignInCode(
-            authStore,
-            await readBoundedJson(request, 1_000),
+          await enforceLimit(limits, "codePerIp", ip);
+          const body = await readBoundedJson(request, 1_000);
+          await enforceLimit(
+            limits,
+            "codePerEmail",
+            normalizeEmail(body?.email),
           );
+          const { email, code } = await createSignInCode(authStore, body);
           if (!resend) {
             console.log(`Sign-in code for ${email}: ${code}`);
             json(res, { sent: true, devCode: code });
@@ -231,6 +242,7 @@ export async function createPreviewServer({
           return;
         }
         if (url.pathname === "/api/auth/verify") {
+          await enforceLimit(limits, "verifyPerIp", ip);
           const { user: signedIn, token } = await verifySignInCode(
             authStore,
             await readBoundedJson(request, 1_000),
@@ -294,6 +306,7 @@ export async function createPreviewServer({
           throw new ApiError("Method not allowed.", 405);
         const request = webRequest(req, url);
         assertSameOrigin(request);
+        await enforceLimit(limits, "orderPerIp", ip);
         const body = await readBoundedJson(request, 20_000);
         const shop = body?.shop;
         if (typeof shop !== "string" || !shop || shop.length > 200)
@@ -443,7 +456,11 @@ export async function createPreviewServer({
         return;
       }
       let target;
-      if (["/", "/menu", "/admin", "/qr", "/credits"].includes(url.pathname))
+      if (
+        ["/", "/menu", "/admin", "/qr", "/credits", "/privacy"].includes(
+          url.pathname,
+        )
+      )
         target = path.join(root, ".sites-runtime/preview/index.html");
       else if (["/app.js", "/app.css"].includes(url.pathname))
         target = path.join(

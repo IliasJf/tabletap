@@ -659,6 +659,7 @@ export default function Restaurant({
               {t.qr}
               <ArrowUpRight size={14} />
             </a>
+            <a href="/privacy">{t.privacy}</a>
             <a href="/credits">Photo credits</a>
           </div>
         </div>
@@ -1001,6 +1002,12 @@ export default function Restaurant({
               <ArrowRight size={18} />
             </button>
             <p className="cart-fine-print">{t.confirm}</p>
+            <p className="cart-fine-print">
+              {t.privacyNote.replace("{restaurant}", restaurantName)}{" "}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                {t.privacy}
+              </a>
+            </p>
           </form>
         )}
       </Modal>

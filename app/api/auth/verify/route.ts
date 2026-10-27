@@ -11,12 +11,15 @@ import {
   verifySignInCode,
 } from "../../../../lib/auth";
 import { d1AuthStore } from "../../../../lib/auth-store";
+import { enforceLimit } from "../../../../lib/rate-limit";
+import { clientIp, d1RateLimitStore } from "../../../../lib/rate-limit-store";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
+    await enforceLimit(d1RateLimitStore(), "verifyPerIp", clientIp(request));
     const body = await readBoundedJson(request, 1_000);
     // An owner who built a menu under ChatGPT sign-in keeps it when they sign
     // in by email with the same address while that platform session is active.
