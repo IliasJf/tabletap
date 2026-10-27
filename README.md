@@ -82,7 +82,7 @@ npm test
 npm run build:preview
 ```
 
-The test suite covers totals and extras, cart tampering, unavailable items, multilingual URL encoding, order validation, owner selection, origin checks, malformed/oversized writes, SQLite persistence, and stale revision conflicts. A GitHub Actions workflow that runs these checks on Node 24 is kept at `docs/ci-workflow.yml`; to turn it on, copy it to `.github/workflows/ci.yml` (on GitHub: **Add file → Create new file**).
+The test suite covers totals and extras, cart tampering, unavailable items, multilingual URL encoding, order validation, owner selection, origin checks, malformed/oversized writes, SQLite persistence, and stale revision conflicts. GitHub Actions (`.github/workflows/ci.yml`) runs these checks, plus the preview build, on Node 24 for every push and pull request.
 
 The local preview build, type check, and automated tests (29 at the latest update) were verified during development. Browser checks covered desktop/mobile layouts, Arabic RTL, customized checkout, delivery totals, owner sign-in, saved menus, and table-specific QR generation. See `docs/VERIFICATION.md` for the exact limits.
 
