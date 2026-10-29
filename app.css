@@ -1,12 +1,12 @@
 @font-face {
   font-family: "DM Sans";
-  src: url("/tabletap/fonts/dm-sans.ttf") format("truetype");
+  src: url("/tabletap/fonts/dm-sans.woff2") format("woff2");
   font-weight: 100 1000;
   font-display: swap;
 }
 @font-face {
   font-family: "Cormorant Garamond";
-  src: url("/tabletap/fonts/cormorant-garamond.ttf") format("truetype");
+  src: url("/tabletap/fonts/cormorant-garamond.woff2") format("woff2");
   font-weight: 300 700;
   font-display: swap;
 }
@@ -128,6 +128,7 @@ button:active,
 .brand {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 9px;
   font-family: var(--serif);
   font-size: 30px;
@@ -158,7 +159,8 @@ button:active,
   border: 0;
   background: none;
   font-size: 13px;
-  padding: 8px 0;
+  min-height: 44px;
+  padding: 0 4px;
   color: var(--ink);
   cursor: pointer;
 }
@@ -425,7 +427,11 @@ button:active,
   gap: 10px;
   align-items: center;
 }
-.menu-item h3 {
+.menu-item .menu-item-name {
+  /* Looks the same whether it is an h2 (/menu) or an h3 (homepage). */
+  font-family: var(--sans);
+  font-weight: 500;
+  letter-spacing: normal;
   font-size: 17px;
   line-height: 1.3;
 }
@@ -542,6 +548,7 @@ button:active,
   display: inline-flex;
   gap: 15px;
   align-items: center;
+  min-height: 44px;
   background: none;
   border: 0;
   padding: 7px 0;
@@ -601,6 +608,7 @@ button:active,
   display: flex;
   gap: 5px;
   align-items: center;
+  min-height: 44px;
 }
 .footer-bottom {
   display: flex;
@@ -696,8 +704,8 @@ button:active,
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--paper);
   border: 0;
@@ -1124,7 +1132,7 @@ fieldset {
     flex-basis: 100px;
     height: 125px;
   }
-  .menu-item h3 {
+  .menu-item .menu-item-name {
     font-size: 15px;
   }
   .menu-item-content > p {
@@ -1171,7 +1179,7 @@ fieldset {
   }
   .bag-button {
     padding: 10px 13px;
-    min-height: 42px;
+    min-height: 44px;
     gap: 7px;
   }
   .hero {
@@ -1296,7 +1304,7 @@ fieldset {
     flex-basis: 105px;
     height: 120px;
   }
-  .menu-item h3 {
+  .menu-item .menu-item-name {
     font-size: 16px;
   }
   .menu-item-content > p {
@@ -1529,7 +1537,7 @@ html[lang="fr"] .hero h1 {
     flex-basis: 90px;
     width: 90px;
   }
-  .menu-item h3 {
+  .menu-item .menu-item-name {
     font-size: 15px;
   }
   .menu-item-content > p {
@@ -1621,6 +1629,10 @@ html[lang="fr"] .hero h1 {
   font-size: 13px;
   opacity: 0.7;
 }
+/* Focus lands on the dialog itself when it opens; no ring for that. */
+.modal-inside:focus {
+  outline: none;
+}
 
 .admin-app,
 .admin-qr-layout {
@@ -1695,7 +1707,7 @@ html[lang="fr"] .hero h1 {
   color: var(--admin-accent);
 }
 .admin-logo-dot {
-  margin-left: -7px;
+  margin-inline-start: -7px;
 }
 .admin-workspace {
   display: flex;
@@ -1738,11 +1750,11 @@ html[lang="fr"] .hero h1 {
   display: flex;
   align-items: center;
   gap: 11px;
-  text-align: left;
+  text-align: start;
   color: var(--admin-muted);
 }
 .admin-sidebar nav button svg:last-child {
-  margin-left: auto;
+  margin-inline-start: auto;
   visibility: hidden;
 }
 .admin-sidebar nav button.active {
@@ -1808,6 +1820,7 @@ html[lang="fr"] .hero h1 {
   display: flex;
   gap: 8px;
   align-items: center;
+  min-height: 44px;
 }
 .admin-nav-toggle {
   display: none;
@@ -1979,7 +1992,7 @@ html[lang="fr"] .hero h1 {
   padding: 12px 0;
 }
 .admin-dish-head span:nth-child(2) {
-  text-align: right;
+  text-align: end;
 }
 .admin-dish-row {
   padding: 16px 0;
@@ -2011,7 +2024,7 @@ html[lang="fr"] .hero h1 {
   margin-top: 5px;
 }
 .admin-dish-price {
-  text-align: right;
+  text-align: end;
   font-size: 13px;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -2029,7 +2042,7 @@ html[lang="fr"] .hero h1 {
   gap: 7px;
   font-size: 12px !important;
   color: var(--admin-ink);
-  text-align: left;
+  text-align: start;
 }
 .admin-availability span {
   width: 6px;
@@ -2056,7 +2069,7 @@ html[lang="fr"] .hero h1 {
 .admin-readonly {
   font-size: 11px;
   color: var(--admin-muted);
-  text-align: right;
+  text-align: end;
 }
 .admin-empty {
   padding: 30px 0;
@@ -2140,7 +2153,7 @@ html[lang="fr"] .hero h1 {
   width: 60px;
   height: 14px;
   background: #eff0eb;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 .admin-text-button,
 .admin-danger-button {
@@ -2399,7 +2412,7 @@ html[lang="fr"] .hero h1 {
 .admin-optional {
   font-weight: 400;
   color: var(--admin-muted);
-  margin-left: 4px;
+  margin-inline-start: 4px;
 }
 .admin-qr-actions {
   display: flex;
@@ -2496,7 +2509,7 @@ html[lang="fr"] .hero h1 {
 .admin-copy-link a svg {
   display: inline-block;
   vertical-align: middle;
-  margin-left: 7px;
+  margin-inline-start: 7px;
 }
 .admin-copy-link button {
   display: grid;
@@ -2505,7 +2518,7 @@ html[lang="fr"] .hero h1 {
   min-width: 40px;
   flex-shrink: 0;
   border: 0;
-  border-left: 1px solid var(--admin-control);
+  border-inline-start: 1px solid var(--admin-control);
   background: var(--admin-paper);
 }
 .admin-feedback {
@@ -2562,7 +2575,7 @@ html[lang="fr"] .hero h1 {
   margin: 0;
   border: 0;
   border-radius: 0;
-  padding-left: 2px;
+  padding-inline-start: 2px;
   min-width: 0;
 }
 .admin-slug-input:focus-within {
@@ -2615,34 +2628,129 @@ html[lang="fr"] .hero h1 {
 }
 /* Orders */
 .admin-order-summary {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, max-content));
+  gap: 12px;
+  margin: 0;
 }
 .admin-order-summary > div {
-  padding: 14px 18px;
-  min-width: 150px;
+  padding: 12px 16px;
+  min-width: 130px;
   background: #f7f8f4;
   border-radius: 8px;
 }
-.admin-order-summary span {
-  display: block;
+.admin-order-summary dt {
   font-size: 12px;
   color: var(--admin-muted);
 }
-.admin-order-summary strong {
-  display: block;
-  margin-top: 4px;
+.admin-order-summary dd {
+  margin: 4px 0 0;
   font-size: 20px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
-.admin-order-summary .admin-secondary {
+.admin-order-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  border-bottom: 1px solid var(--admin-line);
+}
+.admin-order-toolbar .admin-category-tabs {
+  border-bottom: 0;
+}
+.admin-order-tools {
+  display: flex;
+  gap: 4px;
+}
+.admin-icon-text {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-left: auto;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--admin-ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.admin-icon-text:hover {
+  background: var(--admin-active);
+}
+.admin-icon-text[aria-pressed="false"] {
+  color: var(--admin-muted);
+}
+.admin-order-checked {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--admin-muted);
+}
+.admin-order-toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--admin-ink);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+.admin-order-fresh {
+  animation: admin-order-arrive 1.6s ease-out 2;
+  border-radius: 8px;
+}
+@keyframes admin-order-arrive {
+  0% {
+    background-color: #fdf3df;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-order-fresh {
+    animation: none;
+    background-color: #fdf3df;
+  }
+}
+.admin-order-help {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--admin-muted);
+}
+.admin-order-help summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.admin-order-help p {
+  margin: 0;
+  line-height: 1.6;
+  max-width: 560px;
+}
+/* The language switch sits next to "Back to café" at the end of the top bar. */
+.admin-ui-language {
+  margin-inline-start: auto;
+  margin-inline-end: 16px;
+}
+.admin-ui-language select {
+  min-height: 44px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
 }
 .admin-order-list {
   list-style: none;
@@ -2672,7 +2780,7 @@ html[lang="fr"] .hero h1 {
   color: var(--admin-muted);
 }
 .admin-order-total {
-  text-align: right;
+  text-align: end;
   font-variant-numeric: tabular-nums;
 }
 .admin-order ul {
@@ -2759,13 +2867,16 @@ html[lang="fr"] .hero h1 {
     gap: 12px;
   }
   .admin-topbar > a {
-    margin-left: auto;
+    margin-inline-start: 0;
+  }
+  .admin-topbar > span {
+    display: none;
   }
   .admin-nav-toggle {
     display: grid;
     place-items: center;
-    width: 30px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
   .admin-sheet {
     margin: 0 8px 8px;
@@ -2786,8 +2897,23 @@ html[lang="fr"] .hero h1 {
   .admin-category-fields {
     grid-template-columns: 1fr;
   }
-  .admin-order-summary .admin-secondary {
-    margin-left: 0;
+  /* Phones: one compact row of numbers, so orders start near the top. */
+  .admin-order-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .admin-order-summary > div {
+    min-width: 0;
+    padding: 8px 10px;
+  }
+  .admin-order-summary dd {
+    font-size: 15px;
+  }
+  .admin-order-tools span {
+    display: none;
+  }
+  .admin-title-row p {
+    display: none;
   }
   .admin-sheet {
     margin: 0;
@@ -3033,12 +3159,10 @@ html[lang="fr"] .hero h1 {
 .admin-order-summary > .admin-order-attention {
   background: #fdf3df;
 }
-.admin-orders .admin-category-tabs {
-  margin-top: 4px;
-}
+
 .admin-order-status {
   display: inline-block;
-  margin-left: 8px;
+  margin-inline-start: 8px;
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 11px;
@@ -3077,6 +3201,7 @@ html[lang="fr"] .hero h1 {
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  min-height: 44px;
 }
 /* Email sign-in */
 .admin-signin {
@@ -3135,6 +3260,12 @@ button.admin-signout {
 .admin-account strong {
   overflow-wrap: anywhere;
 }
+/* Directional arrows point the reading way in Arabic. */
+[dir="rtl"] .admin-text-button > svg.lucide-arrow-left,
+[dir="rtl"] .admin-edit-button > svg.lucide-chevron-right,
+[dir="rtl"] .admin-sidebar nav svg.lucide-chevron-right {
+  transform: scaleX(-1);
+}
 
 /* Floating badge shown only on the GitHub Pages demo. */
 .demo-badge {
@@ -3162,9 +3293,12 @@ button.admin-signout {
 }
 .demo-badge button,
 .demo-badge a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   border: 0;
   background: none;
-  padding: 0;
+  padding: 0 4px;
   color: inherit;
   font: inherit;
   text-decoration: underline;
