@@ -47,3 +47,9 @@ yarn-error.log*
 
 # Personal Claude Code settings
 /.claude/settings.local.json
+
+# GitHub Pages demo build
+/demo-dist/
+
+# Playwright MCP snapshots
+/.playwright-mcp/

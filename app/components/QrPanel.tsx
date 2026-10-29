@@ -29,7 +29,10 @@ export default function QrPanel({
   const [feedback, setFeedback] = useState("");
   const [qrError, setQrError] = useState("");
   useEffect(() => {
-    setBase(publicUrl || window.location.origin);
+    // The site root, including any path the app is served under (e.g. /tabletap/).
+    setBase(
+      publicUrl || new URL(".", document.baseURI).href.replace(/\/$/, ""),
+    );
   }, [publicUrl]);
 
   const result = useMemo(() => {

@@ -122,7 +122,7 @@ export default function SignInPanel({
           </label>
           {devCode && (
             <p className="admin-notice" role="status">
-              Local preview: email isn&apos;t set up, so here is your code:{" "}
+              Email isn&apos;t connected here, so here is your code:{" "}
               <strong>{devCode}</strong>
             </p>
           )}

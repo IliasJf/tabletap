@@ -2,7 +2,17 @@
 
 A café menu and ordering app with table QR codes, a persistent owner dashboard, and WhatsApp checkout. Built around **Olive & Ember**, a fictional café, with a complete English, French, and Arabic menu.
 
+**[Try the live demo →](https://iliasjf.github.io/tabletap/)** Sign in to the owner dashboard with any email; the demo shows your code on screen.
+
 ![Olive & Ember desktop preview](docs/screenshots/desktop.png)
+
+| Owner dashboard | Orders |
+| --- | --- |
+| ![Menu editor with sections and dishes](docs/screenshots/dashboard.png) | ![Orders with New, Preparing and Done statuses](docs/screenshots/orders.png) |
+
+| Phone | Menu | Arabic (right to left) |
+| --- | --- | --- |
+| ![Homepage on a phone](docs/screenshots/mobile-home.png) | ![Menu on a phone at table 5](docs/screenshots/mobile-menu.png) | ![Arabic menu on a phone](docs/screenshots/mobile-menu-ar.png) |
 
 ## Try it locally
 
@@ -113,9 +123,16 @@ Without both values, the production sign-in form explains that email sign-in isn
 
 Owner identity comes only from the session cookie, never from client-supplied headers or fields. Codes and session tokens are stored as SHA-256 hashes.
 
-## GitHub presentation
+## Live demo (GitHub Pages)
 
-Upload the source (or extract the supplied source ZIP) to your repository. Include the README, tests, migrations, and screenshots. Keep `node_modules`, `.sites-runtime`, `.wrangler`, local environment files, and generated builds out of Git. After you deploy your own public demo, add its verified URL to this README and your repository's About section, then pin the repository on your profile.
+**https://iliasjf.github.io/tabletap/** runs the real interface as static files. A small in-browser API (`scripts/demo/demo-api.ts`) stands in for the server: it reuses the app's own validation, sign-in, order and pricing code, and keeps everything in the visitor's `localStorage`. Each visitor gets a private sandbox, sign-in codes appear on screen, new owners start with three sample orders, and **Reset demo** clears it all. Nothing is sent to a server, and customers can't reach a real restaurant on WhatsApp because the demo has no number set.
+
+```sh
+npm run build:demo   # builds demo-dist/ for /tabletap/
+npm run serve:demo   # serves it at http://localhost:5174/tabletap/
+```
+
+To publish an update, push the contents of `demo-dist/` to the `gh-pages` branch; GitHub Pages serves that branch.
 
 ## License
 

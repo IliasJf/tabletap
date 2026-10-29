@@ -15,7 +15,9 @@
     "preview:local": "node scripts/preview.mjs",
     "typecheck": "tsc --noEmit --incremental false",
     "test": "node --experimental-strip-types --test --test-isolation=none tests/cart.test.mjs tests/access.test.mjs tests/server.test.mjs tests/features.test.mjs tests/auth.test.mjs tests/rate-limit.test.mjs",
-    "build:preview": "node scripts/build-preview.mjs"
+    "build:preview": "node scripts/build-preview.mjs",
+    "build:demo": "node scripts/build-demo.mjs",
+    "serve:demo": "node scripts/serve-demo.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
