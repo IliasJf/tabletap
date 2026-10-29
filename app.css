@@ -10,6 +10,15 @@
   font-weight: 300 700;
   font-display: swap;
 }
+/* Arabic headings: Cormorant has no Arabic, so Amiri (Naskh) takes over.
+   unicode-range means it only downloads when Arabic text is on screen. */
+@font-face {
+  font-family: "Amiri";
+  src: url("/tabletap/fonts/amiri.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+200C-200F;
+}
 :root {
   --paper: #f8f7f2;
   --ink: #252b20;
@@ -17,7 +26,7 @@
   --surface: #eeeee5;
   --muted: #666b5f;
   --line: #dedfd5;
-  --serif: "Cormorant Garamond", Georgia, serif;
+  --serif: "Cormorant Garamond", "Amiri", Georgia, serif;
   --sans: "DM Sans", Arial, sans-serif;
   --background: var(--paper);
   --foreground: var(--ink);
@@ -322,6 +331,28 @@ button:active,
 .category-tabs::-webkit-scrollbar {
   display: none;
 }
+/* Fade whichever edge hides more tabs, so it is clear the row scrolls. */
+.category-tabs[data-more-end] {
+  mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent);
+}
+.category-tabs[data-more-start] {
+  mask-image: linear-gradient(to left, #000 calc(100% - 56px), transparent);
+}
+.category-tabs[data-more-start][data-more-end] {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 56px,
+    #000 calc(100% - 56px),
+    transparent
+  );
+}
+[dir="rtl"] .category-tabs[data-more-end] {
+  mask-image: linear-gradient(to left, #000 calc(100% - 56px), transparent);
+}
+[dir="rtl"] .category-tabs[data-more-start]:not([data-more-end]) {
+  mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent);
+}
 .category-tabs button {
   flex-shrink: 0;
   border: 0;
@@ -459,21 +490,26 @@ button:active,
   font-weight: 500;
   white-space: nowrap;
 }
+/* The main action on every dish: solid, so it reads before the description. */
 .add-button {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: transparent;
-  border: 1px solid #bdc4af;
+  gap: 10px;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
   border-radius: 30px;
-  font-size: 12px;
-  padding: 7px 13px;
-  min-height: 36px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 16px;
+  min-height: 44px;
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
 }
 .add-button:hover:not(:disabled) {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
+  background: #2f3a22;
+  border-color: #2f3a22;
 }
 .unavailable .menu-image-button {
   filter: grayscale(0.7);
@@ -483,6 +519,9 @@ button:active,
   border: 0;
   padding: 8px 0;
   white-space: nowrap;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 400;
 }
 .allergy-note {
   font-size: 12px;
@@ -1233,9 +1272,17 @@ fieldset {
     padding: 8px 0;
   }
   .hero-photo-caption {
-    padding-inline-start: 60px;
+    /* Start past the 120px coffee photo so it never covers the caption. */
+    padding-inline-start: 132px;
     font-size: 10px;
     gap: 10px;
+  }
+  /* Too narrow for both phrases on one line; keep the café's name. */
+  .hero-photo-caption span:last-child {
+    display: none;
+  }
+  .hero-photo-caption span {
+    white-space: nowrap;
   }
   .menu-section {
     padding-top: 25px;
@@ -1320,8 +1367,8 @@ fieldset {
   }
   .add-button {
     font-size: 12px;
-    min-height: 36px;
-    padding: 6px 13px;
+    min-height: 44px;
+    padding: 6px 14px;
   }
   .allergy-note {
     margin-top: 26px;
@@ -1633,6 +1680,12 @@ html[lang="fr"] .hero h1 {
 .modal-inside:focus {
   outline: none;
 }
+/* Arabic: letter-spacing breaks the joins between letters, and Naskh
+   reaches higher and lower than Latin, so headings need more line height. */
+html[lang="ar"] :is(h1, h2, .brand, .hero-small-photo span) {
+  letter-spacing: normal;
+  line-height: 1.35;
+}
 
 .admin-app,
 .admin-qr-layout {
@@ -1716,13 +1769,17 @@ html[lang="fr"] .hero h1 {
   margin-top: 13px;
 }
 .admin-workspace-symbol {
-  background: #e6e8dd;
+  background: var(--admin-accent);
+  color: #f8f7f2;
   width: 36px;
   height: 36px;
+  border-radius: 8px;
   display: grid;
   place-items: center;
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   flex-shrink: 0;
 }
 .admin-workspace strong,
