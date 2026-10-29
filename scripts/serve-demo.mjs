@@ -17,6 +17,7 @@ const types = {
   ".jpg": "image/jpeg",
   ".png": "image/png",
   ".ttf": "font/ttf",
+  ".woff2": "font/woff2",
   ".txt": "text/plain; charset=utf-8",
 };
 

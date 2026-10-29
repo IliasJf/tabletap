@@ -1,4 +1,5 @@
 import { calculateCart, validateOrder } from "./cart.ts";
+import { pickText } from "./text.ts";
 import type { Catalog, Language, OrderDetails, OrderType } from "./types";
 
 /** Newest orders kept per restaurant; older ones are removed on insert. */
@@ -123,8 +124,8 @@ export function buildOrderRecord(
     address: details.type === "delivery" ? details.address.trim() : "",
     notes: details.notes.trim(),
     lines: totals.lines.map((line) => ({
-      name: line.item.name.en,
-      options: line.options.map((option) => option.label.en),
+      name: pickText(line.item.name, "en"),
+      options: line.options.map((option) => pickText(option.label, "en")),
       quantity: line.quantity,
       total: line.total,
     })),

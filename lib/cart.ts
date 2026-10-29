@@ -6,6 +6,7 @@ import type {
   MenuOption,
   OrderDetails,
 } from "./types";
+import { pickText } from "./text.ts";
 
 export interface CartLine {
   key: string;
@@ -16,15 +17,16 @@ export interface CartLine {
   total: number;
 }
 
+/** Prices the way Moroccan menus write them: "68 DH", "68,50 DH", "68 درهم". */
 export function formatPrice(amount: number, language: Language = "en"): string {
-  return new Intl.NumberFormat(
-    language === "ar" ? "ar-MA" : language === "fr" ? "fr-MA" : "en",
+  const number = new Intl.NumberFormat(
+    language === "ar" ? "ar-MA" : language === "fr" ? "fr" : "en",
     {
-      style: "currency",
-      currency: "MAD",
-      maximumFractionDigits: amount % 100 === 0 ? 0 : 2,
+      minimumFractionDigits: amount % 100 === 0 ? 0 : 2,
+      maximumFractionDigits: 2,
     },
   ).format(amount / 100);
+  return language === "ar" ? `${number} درهم` : `${number} DH`;
 }
 
 export function cartKey(itemId: string, optionIds: string[] = []): string {
@@ -245,7 +247,7 @@ export function buildWhatsAppMessage(
     "",
     ...totals.lines.map(
       (line) =>
-        `${line.quantity} × ${line.item.name[language]}${line.options.length ? ` (${line.options.map((option) => option.label[language]).join(", ")})` : ""} — ${formatPrice(line.total, language)}`,
+        `${line.quantity} × ${pickText(line.item.name, language)}${line.options.length ? ` (${line.options.map((option) => pickText(option.label, language)).join(", ")})` : ""} — ${formatPrice(line.total, language)}`,
     ),
     "",
     `${words.subtotal}: ${formatPrice(totals.subtotal, language)}`,

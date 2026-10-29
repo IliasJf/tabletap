@@ -86,7 +86,11 @@ function save(state: State) {
 /** Clears everything this demo stored in the browser. */
 export function resetDemo() {
   for (const key of Object.keys(localStorage))
-    if (key.startsWith("tabletap-demo:") || key.startsWith("tabletap:cart:"))
+    if (
+      key.startsWith("tabletap-demo:") ||
+      key.startsWith("tabletap:cart:") ||
+      key === "tabletap:customer-name"
+    )
       localStorage.removeItem(key);
 }
 

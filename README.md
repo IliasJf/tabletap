@@ -38,18 +38,22 @@ The local preview includes SQLite persistence. Owners sign in on `/admin` with t
 
 - Responsive café homepage with locally stored food photographs and fonts.
 - Menu search, owner-defined menu sections, a vegetarian filter, and unavailable dishes.
-- Item extras, quantities, editable cart, and exact integer-based MAD totals.
+- Item extras, quantities, editable cart, and exact integer-based totals, written the way Moroccan menus do (“68 DH”, “68,50 DH”, “68 درهم”).
 - A cart saved per restaurant in browser storage, validated against current menu data.
 - Dine-in, takeaway, and delivery details, including table numbers and delivery fees.
 - A formatted WhatsApp order preview, copy action, and encoded checkout link.
-- English, French, and Arabic menu/checkout UI with right-to-left layout.
+- English, French, and Arabic menu/checkout UI with right-to-left layout. Owners can fill in only the languages they want; missing translations fall back to the next available one.
+- The owner dashboard in English, French or Arabic (right to left), following the phone's language on first visit.
 - Owner menu editing: translations, prices, extras, availability, and restaurant details.
 - Photo upload from a phone or computer, resized in the browser and stored with the menu.
 - Menu sections the owner can add, rename in three languages, reorder, and remove.
 - An order log: each order a customer opens in WhatsApp is recorded, priced from the saved menu, with today's count and value.
 - Server-side validation, authenticated ownership, bounded request bodies, and optimistic revision checks.
 - Passwordless email sign-in: a 6-digit code (10-minute expiry, 5 tries, 1-minute resend wait), hashed codes and session tokens, and 30-day HttpOnly sessions.
-- Order statuses (new, preparing, done, cancelled) with an Orders screen that refreshes every 30 seconds.
+- Order statuses (new, preparing, done, cancelled) with an Orders screen that checks every 30 seconds and when you return to the tab. New orders play a short chime (can be switched off), show a banner, and count in the tab title. On phones the orders come first.
+- Customers' names are remembered on their own phone for the next order.
+- Link previews (Open Graph) so a shared menu link shows the café's name, tagline and a dish photo on WhatsApp and Instagram.
+- Light pages: Latin-only WOFF2 fonts (130 KB for both) and compressed photos (500 KB for the sample menu).
 - Spam limits: 20 orders per connection every 10 minutes, 10 sign-in codes per email per day, and caps on sign-in requests and guesses per connection. Only hashed IP addresses are stored, for at most a day.
 - A privacy page (`/privacy`, in English, French and Arabic) and a note at checkout explaining what is kept.
 - A readable menu link for each restaurant (`/menu?shop=olive-and-ember`), with optional `table=5` preselection. Links printed with the owner ID keep working.
@@ -94,7 +98,7 @@ npm run build:preview
 
 The test suite covers totals and extras, cart tampering, unavailable items, multilingual URL encoding, order validation, owner selection, origin checks, malformed/oversized writes, SQLite persistence, and stale revision conflicts. GitHub Actions (`.github/workflows/ci.yml`) runs these checks, plus the preview build, on Node 24 for every push and pull request.
 
-The local preview build, type check, and automated tests (29 at the latest update) were verified during development. Browser checks covered desktop/mobile layouts, Arabic RTL, customized checkout, delivery totals, owner sign-in, saved menus, and table-specific QR generation. See `docs/VERIFICATION.md` for the exact limits.
+The local preview build, type check, and automated tests (32 at the latest update) were verified during development. Browser checks covered desktop/mobile layouts, Arabic RTL, customized checkout, delivery totals, owner sign-in, saved menus, and table-specific QR generation. See `docs/VERIFICATION.md` for the exact limits.
 
 ## Production deployment
 

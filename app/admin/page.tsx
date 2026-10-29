@@ -28,6 +28,8 @@ import type {
   MenuItem,
   MenuOption,
 } from "../../lib/types";
+import { formatPrice } from "../../lib/cart";
+import { pickText } from "../../lib/text";
 import { createSeedCatalog } from "../../lib/menu-data";
 import {
   SLUG_PATTERN,
@@ -39,6 +41,12 @@ import CategoriesPanel from "./CategoriesPanel";
 import OrdersPanel from "./OrdersPanel";
 import PhotoField from "./PhotoField";
 import SignInPanel from "./SignInPanel";
+import {
+  ADMIN_LANGUAGE_KEY,
+  AdminCopyContext,
+  adminCopy,
+  initialAdminLanguage,
+} from "./admin-copy";
 import "./admin.css";
 
 type View = "menu" | "categories" | "orders" | "restaurant" | "qr";
@@ -47,7 +55,9 @@ const languages: { id: Language; label: string }[] = [
   { id: "fr", label: "Français" },
   { id: "ar", label: "العربية" },
 ];
-const money = (price: number) => (price / 100).toFixed(2);
+/** Owners read names in the dashboard's language, falling back like customers do. */
+const label = (text: Catalog["items"][number]["name"], language: Language) =>
+  pickText(text, language);
 const newId = () => crypto.randomUUID().replaceAll("-", "");
 
 export default function AdminPage() {
@@ -64,6 +74,9 @@ export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [language, setLanguage] = useState<Language>("en");
+  // The dashboard's own language, separate from the dish translation being edited.
+  const [uiLanguage, setUiLanguage] = useState<Language>("en");
+  const t = adminCopy[uiLanguage];
   const [navigationOpen, setNavigationOpen] = useState(false);
   const dirty = JSON.stringify(catalog) !== JSON.stringify(saved);
   const selected = catalog.items.find((item) => item.id === selectedId);
@@ -80,8 +93,7 @@ export default function AdminPage() {
     setConflict(false);
     try {
       const session = await fetch("/api/me", { cache: "no-store" });
-      if (!session.ok)
-        throw new Error("We could not check your sign-in. Please try again.");
+      if (!session.ok) throw new Error(t.errorSignIn);
       const sessionData = (await session.json()) as { user: AppUser | null };
       setUser(sessionData.user);
       if (sessionData.user) {
@@ -90,10 +102,7 @@ export default function AdminPage() {
         });
         const data = await response.json();
         if (!response.ok)
-          throw new Error(
-            (data as { error?: string }).error ||
-              "Your menu could not be loaded.",
-          );
+          throw new Error((data as { error?: string }).error || t.errorLoad);
         setCatalog(validateCatalog(data));
         setSaved(validateCatalog(data));
       } else {
@@ -102,18 +111,25 @@ export default function AdminPage() {
         setSaved(demo);
       }
     } catch (cause) {
-      setError(
-        cause instanceof Error
-          ? cause.message
-          : "Your menu could not be loaded.",
-      );
+      setError(cause instanceof Error ? cause.message : t.errorLoad);
     } finally {
       setLoading(false);
     }
+    // Messages follow the dashboard language at the time of loading.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     void load();
   }, [load]);
+  useEffect(() => {
+    setUiLanguage(initialAdminLanguage());
+  }, []);
+  function changeUiLanguage(next: Language) {
+    setUiLanguage(next);
+    try {
+      localStorage.setItem(ADMIN_LANGUAGE_KEY, next);
+    } catch {}
+  }
   useEffect(() => {
     if (!dirty) return;
     const warn = (event: BeforeUnloadEvent) => {
@@ -157,7 +173,7 @@ export default function AdminPage() {
     const item: MenuItem = {
       id: newId(),
       category: filter === "all" ? categories[0].id : filter,
-      name: { en: "New dish", fr: "Nouveau plat", ar: "طبق جديد" },
+      name: { en: "", fr: "", ar: "", [uiLanguage]: t.newDish },
       description: { en: "", fr: "", ar: "" },
       price: 0,
       image: "/images/toast.jpg",
@@ -167,15 +183,13 @@ export default function AdminPage() {
     };
     setCatalog((current) => ({ ...current, items: [...current.items, item] }));
     setSelectedId(item.id);
-    setLanguage("en");
+    setLanguage(uiLanguage);
     setNotice("");
   }
   function deleteItem() {
     if (
       !selected ||
-      !window.confirm(
-        `Remove “${selected.name.en}” from the menu? Save your menu to publish this change.`,
-      )
+      !window.confirm(t.confirmDelete(label(selected.name, uiLanguage)))
     )
       return;
     setCatalog((current) => ({
@@ -192,11 +206,7 @@ export default function AdminPage() {
     try {
       checked = validateCatalog(catalog);
     } catch (cause) {
-      setError(
-        cause instanceof Error
-          ? cause.message
-          : "Please check the fields in your menu.",
-      );
+      setError(cause instanceof Error ? cause.message : t.errorFields);
       return;
     }
     setSaving(true);
@@ -209,27 +219,19 @@ export default function AdminPage() {
       const data = await response.json();
       if (!response.ok) {
         setConflict(response.status === 409);
-        throw new Error(
-          (data as { error?: string }).error ||
-            "Your menu could not be saved. Please try again.",
-        );
+        throw new Error((data as { error?: string }).error || t.errorSave);
       }
       setCatalog(validateCatalog(data));
       setSaved(validateCatalog(data));
-      setNotice("Your menu is saved. Customers can see the latest version.");
+      setNotice(t.savedNotice);
     } catch (cause) {
-      setError(
-        cause instanceof Error
-          ? cause.message
-          : "Your menu could not be saved.",
-      );
+      setError(cause instanceof Error ? cause.message : t.errorSave);
     } finally {
       setSaving(false);
     }
   }
   async function signOut() {
-    if (dirty && !window.confirm("Sign out and discard your unsaved changes?"))
-      return;
+    if (dirty && !window.confirm(t.confirmSignOut)) return;
     try {
       await fetch("/api/auth/signout", { method: "POST" });
     } finally {
@@ -256,848 +258,845 @@ export default function AdminPage() {
   const title =
     view === "menu"
       ? selected
-        ? "Edit dish"
-        : "Your menu"
+        ? t.titleEditDish
+        : t.titleMenu
       : view === "categories"
-        ? "Menu sections"
+        ? t.titleSections
         : view === "orders"
-          ? "Orders"
+          ? t.titleOrders
           : view === "restaurant"
-            ? "Restaurant details"
-            : "QR codes";
+            ? t.titleRestaurant
+            : t.titleQr;
 
   return (
-    <div className="admin-app" data-ui>
-      <aside
-        className={`admin-sidebar ${navigationOpen ? "admin-sidebar-open" : ""}`}
+    <AdminCopyContext.Provider value={{ t, language: uiLanguage }}>
+      <div
+        className="admin-app"
+        data-ui
+        lang={uiLanguage}
+        dir={uiLanguage === "ar" ? "rtl" : "ltr"}
       >
-        <a className="admin-logo" href="/">
-          <Coffee size={25} strokeWidth={1.6} />
-          TableTap<span className="admin-logo-dot">.</span>
-        </a>
-        <div className="admin-workspace">
-          <span className="admin-workspace-symbol">O&E</span>
-          <div>
-            <strong>{catalog.settings.name}</strong>
-            <span>{user ? "Your restaurant" : "Demo restaurant"}</span>
-          </div>
-        </div>
-        <nav aria-label="Owner navigation">
-          <button
-            type="button"
-            className={view === "menu" ? "active" : ""}
-            onClick={() => switchView("menu")}
-          >
-            <LayoutList size={18} />
-            Menu
-            <ChevronRight size={15} />
-          </button>
-          <button
-            type="button"
-            className={view === "categories" ? "active" : ""}
-            onClick={() => switchView("categories")}
-          >
-            <ListOrdered size={18} />
-            Sections
-            <ChevronRight size={15} />
-          </button>
-          <button
-            type="button"
-            className={view === "orders" ? "active" : ""}
-            onClick={() => switchView("orders")}
-          >
-            <ReceiptText size={18} />
-            Orders
-            <ChevronRight size={15} />
-          </button>
-          <button
-            type="button"
-            className={view === "restaurant" ? "active" : ""}
-            onClick={() => switchView("restaurant")}
-          >
-            <Settings size={18} />
-            Restaurant
-            <ChevronRight size={15} />
-          </button>
-          <button
-            type="button"
-            className={view === "qr" ? "active" : ""}
-            onClick={() => switchView("qr")}
-          >
-            <QrCode size={18} />
-            QR codes
-            <ChevronRight size={15} />
-          </button>
-        </nav>
-        <div className="admin-sidebar-bottom">
-          <a href={publicLink} target="_blank" rel="noopener noreferrer">
-            View customer menu <ArrowUpRight size={17} />
+        <aside
+          className={`admin-sidebar ${navigationOpen ? "admin-sidebar-open" : ""}`}
+        >
+          <a className="admin-logo" href="/">
+            <Coffee size={25} strokeWidth={1.6} />
+            TableTap<span className="admin-logo-dot">.</span>
           </a>
-          <div className="admin-account">
-            <span>{user?.name?.slice(0, 1).toUpperCase() || "D"}</span>
+          <div className="admin-workspace">
+            <span className="admin-workspace-symbol">O&E</span>
             <div>
-              <strong>{user?.name || "Demo workspace"}</strong>
-              <small>
-                {user ? "Signed in by email" : "Explore before you sign in"}
-              </small>
+              <strong>{catalog.settings.name}</strong>
+              <span>{user ? t.yourRestaurant : t.demoRestaurant}</span>
             </div>
           </div>
-          {user && (
+          <nav aria-label={t.ownerNavigation}>
             <button
               type="button"
-              className="admin-signout"
-              onClick={() => void signOut()}
+              className={view === "menu" ? "active" : ""}
+              onClick={() => switchView("menu")}
             >
-              Sign out
+              <LayoutList size={18} />
+              {t.navMenu}
+              <ChevronRight size={15} />
             </button>
-          )}
-        </div>
-      </aside>
-      <div className="admin-body">
-        <header className="admin-topbar">
-          <button
-            type="button"
-            className="admin-nav-toggle"
-            onClick={() => setNavigationOpen((open) => !open)}
-            aria-label={navigationOpen ? "Close navigation" : "Open navigation"}
-            aria-expanded={navigationOpen}
-          >
-            {navigationOpen ? <X size={20} /> : <LayoutList size={20} />}
-          </button>
-          <span>Restaurant workspace</span>
-          <a href="/">
-            Back to café <ArrowUpRight size={14} />
-          </a>
-        </header>
-        <main className="admin-sheet">
-          <div className="admin-title-row">
-            <div>
-              <h1>{title}</h1>
-              <p>
-                {view === "menu"
-                  ? "A little care for every dish on the table."
-                  : view === "categories"
-                    ? "Group your dishes the way your guests think about them."
-                    : view === "orders"
-                      ? "Every order your guests prepare from your menu."
-                      : view === "restaurant"
-                        ? "The details your guests need before they order."
-                        : "Make the next good meal one scan away."}
-              </p>
+            <button
+              type="button"
+              className={view === "categories" ? "active" : ""}
+              onClick={() => switchView("categories")}
+            >
+              <ListOrdered size={18} />
+              {t.navSections}
+              <ChevronRight size={15} />
+            </button>
+            <button
+              type="button"
+              className={view === "orders" ? "active" : ""}
+              onClick={() => switchView("orders")}
+            >
+              <ReceiptText size={18} />
+              {t.navOrders}
+              <ChevronRight size={15} />
+            </button>
+            <button
+              type="button"
+              className={view === "restaurant" ? "active" : ""}
+              onClick={() => switchView("restaurant")}
+            >
+              <Settings size={18} />
+              {t.navRestaurant}
+              <ChevronRight size={15} />
+            </button>
+            <button
+              type="button"
+              className={view === "qr" ? "active" : ""}
+              onClick={() => switchView("qr")}
+            >
+              <QrCode size={18} />
+              {t.navQr}
+              <ChevronRight size={15} />
+            </button>
+          </nav>
+          <div className="admin-sidebar-bottom">
+            <a href={publicLink} target="_blank" rel="noopener noreferrer">
+              {t.viewCustomerMenu} <ArrowUpRight size={17} />
+            </a>
+            <div className="admin-account">
+              <span>{user?.name?.slice(0, 1).toUpperCase() || "D"}</span>
+              <div>
+                <strong>{user?.name || t.demoWorkspace}</strong>
+                <small>
+                  {user ? t.signedInByEmail : t.exploreBeforeSignIn}
+                </small>
+              </div>
             </div>
-            {user && view !== "orders" && (
+            {user && (
               <button
                 type="button"
-                className="admin-primary"
-                onClick={() => void save()}
-                disabled={loading || saving || (!dirty && catalog.revision > 0)}
+                className="admin-signout"
+                onClick={() => void signOut()}
               >
-                <Save size={16} />
-                {saving
-                  ? "Saving…"
-                  : dirty
-                    ? "Save changes"
-                    : catalog.revision === 0
-                      ? "Save your menu"
-                      : "Saved"}
+                {t.signOut}
               </button>
             )}
           </div>
-          {error && (
-            <div className="admin-message admin-message-error" role="alert">
-              <p>{error}</p>
-              {conflict ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Reload the saved menu? This will discard your unsaved changes.",
-                      )
-                    ) {
-                      setSelectedId(null);
-                      void load();
-                    }
-                  }}
-                >
-                  Reload saved menu
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (
-                      !dirty ||
-                      window.confirm(
-                        "Reload the menu and discard your unsaved changes?",
-                      )
-                    )
-                      void load();
-                  }}
-                >
-                  <RefreshCw size={14} />
-                  Retry loading
-                </button>
-              )}
-            </div>
-          )}
-          {notice && (
-            <div className="admin-message" role="status">
-              <Check size={16} />
-              <p>{notice}</p>
-            </div>
-          )}
-          {dirty && (
-            <p className="admin-unsaved">
-              You have unsaved changes. Save to update the customer menu.
-            </p>
-          )}
-          {loading ? (
-            <div className="admin-loading" role="status">
-              <p>Opening your restaurant workspace…</p>
-              {[1, 2, 3, 4].map((n) => (
-                <div className="admin-skeleton-row" key={n}>
-                  <span />
-                  <div />
-                  <span />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <>
-              {!user && <SignInPanel onSignedIn={() => void load()} />}
-              {user && catalog.revision === 0 && (
-                <p className="admin-notice">
-                  Your workspace starts with a sample café menu. Add your
-                  restaurant details, then save to create your public menu.
+        </aside>
+        <div className="admin-body">
+          <header className="admin-topbar">
+            <button
+              type="button"
+              className="admin-nav-toggle"
+              onClick={() => setNavigationOpen((open) => !open)}
+              aria-label={navigationOpen ? t.closeNavigation : t.openNavigation}
+              aria-expanded={navigationOpen}
+            >
+              {navigationOpen ? <X size={20} /> : <LayoutList size={20} />}
+            </button>
+            <span>{t.workspace}</span>
+            <label className="admin-ui-language">
+              <span className="sr-only">{t.dashboardLanguage}</span>
+              <select
+                value={uiLanguage}
+                onChange={(e) => changeUiLanguage(e.target.value as Language)}
+              >
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <a href="/">
+              {t.backToCafe} <ArrowUpRight size={14} />
+            </a>
+          </header>
+          <main className="admin-sheet">
+            <div className="admin-title-row">
+              <div>
+                <h1>{title}</h1>
+                <p>
+                  {view === "menu"
+                    ? t.introMenu
+                    : view === "categories"
+                      ? t.introSections
+                      : view === "orders"
+                        ? t.introOrders
+                        : view === "restaurant"
+                          ? t.introRestaurant
+                          : t.introQr}
                 </p>
+              </div>
+              {user && view !== "orders" && (
+                <button
+                  type="button"
+                  className="admin-primary"
+                  onClick={() => void save()}
+                  disabled={
+                    loading || saving || (!dirty && catalog.revision > 0)
+                  }
+                >
+                  <Save size={16} />
+                  {saving
+                    ? t.saving
+                    : dirty
+                      ? t.saveChanges
+                      : catalog.revision === 0
+                        ? t.saveYourMenu
+                        : t.saved}
+                </button>
               )}
-              {view === "menu" && !selected && (
-                <>
-                  <div
-                    className="admin-category-tabs"
-                    aria-label="Filter menu categories"
+            </div>
+            {error && (
+              <div className="admin-message admin-message-error" role="alert">
+                <p>{error}</p>
+                {conflict ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm(t.confirmReloadSaved)) {
+                        setSelectedId(null);
+                        void load();
+                      }
+                    }}
                   >
-                    <button
-                      type="button"
-                      className={filter === "all" ? "active" : ""}
-                      onClick={() => setFilter("all")}
+                    {t.reloadSaved}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!dirty || window.confirm(t.confirmReload))
+                        void load();
+                    }}
+                  >
+                    <RefreshCw size={14} />
+                    {t.retryLoading}
+                  </button>
+                )}
+              </div>
+            )}
+            {notice && (
+              <div className="admin-message" role="status">
+                <Check size={16} />
+                <p>{notice}</p>
+              </div>
+            )}
+            {dirty && <p className="admin-unsaved">{t.unsaved}</p>}
+            {loading ? (
+              <div className="admin-loading" role="status">
+                <p>{t.opening}</p>
+                {[1, 2, 3, 4].map((n) => (
+                  <div className="admin-skeleton-row" key={n}>
+                    <span />
+                    <div />
+                    <span />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                {!user && <SignInPanel onSignedIn={() => void load()} />}
+                {user && catalog.revision === 0 && view !== "orders" && (
+                  <p className="admin-notice">{t.sampleStart}</p>
+                )}
+                {view === "menu" && !selected && (
+                  <>
+                    <div
+                      className="admin-category-tabs"
+                      aria-label={t.filterCategories}
                     >
-                      All dishes
-                    </button>
-                    {categories.map((category) => (
                       <button
                         type="button"
-                        key={category.id}
-                        className={filter === category.id ? "active" : ""}
-                        onClick={() => setFilter(category.id)}
+                        className={filter === "all" ? "active" : ""}
+                        onClick={() => setFilter("all")}
                       >
-                        {category.name.en}
+                        {t.allDishes}
                       </button>
-                    ))}
-                  </div>
-                  <div className="admin-list-toolbar">
-                    <label className="admin-search">
-                      <Search size={17} />
-                      <input
-                        type="search"
-                        aria-label="Search dishes"
-                        placeholder="Find a dish…"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                      />
-                    </label>
-                    <div>
-                      <span>
-                        {items.length} {items.length === 1 ? "dish" : "dishes"}
-                      </span>
-                      {user && (
+                      {categories.map((category) => (
                         <button
-                          className="admin-secondary"
                           type="button"
-                          onClick={addItem}
-                          disabled={catalog.items.length >= 100}
+                          key={category.id}
+                          className={filter === category.id ? "active" : ""}
+                          onClick={() => setFilter(category.id)}
                         >
-                          <Plus size={16} />
-                          Add dish
+                          {label(category.name, uiLanguage)}
                         </button>
+                      ))}
+                    </div>
+                    <div className="admin-list-toolbar">
+                      <label className="admin-search">
+                        <Search size={17} />
+                        <input
+                          type="search"
+                          aria-label={t.searchDishes}
+                          placeholder={t.findDish}
+                          value={search}
+                          onChange={(e) => setSearch(e.target.value)}
+                        />
+                      </label>
+                      <div>
+                        <span>{t.dishCount(items.length)}</span>
+                        {user && (
+                          <button
+                            className="admin-secondary"
+                            type="button"
+                            onClick={addItem}
+                            disabled={catalog.items.length >= 100}
+                          >
+                            <Plus size={16} />
+                            {t.addDish}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="admin-dish-list">
+                      <div className="admin-dish-head">
+                        <span>{t.columnDish}</span>
+                        <span>{t.columnPrice}</span>
+                        <span>{t.columnAvailability}</span>
+                        <span />
+                      </div>
+                      {items.length ? (
+                        items.map((item) => (
+                          <div className="admin-dish-row" key={item.id}>
+                            <div className="admin-dish-identity">
+                              <img
+                                src={item.image}
+                                alt=""
+                                width={60}
+                                height={60}
+                                onError={(e) => {
+                                  e.currentTarget.src = "/images/toast.jpg";
+                                }}
+                              />
+                              <div>
+                                <strong>{label(item.name, uiLanguage)}</strong>
+                                <span>
+                                  {(() => {
+                                    const section = categories.find(
+                                      (c) => c.id === item.category,
+                                    );
+                                    return section
+                                      ? label(section.name, uiLanguage)
+                                      : "";
+                                  })()}
+                                </span>
+                              </div>
+                            </div>
+                            <span className="admin-dish-price">
+                              {formatPrice(item.price, uiLanguage)}
+                            </span>
+                            <button
+                              type="button"
+                              className={`admin-availability ${item.available ? "" : "unavailable"}`}
+                              aria-pressed={item.available}
+                              aria-label={t.availabilityLabel(
+                                label(item.name, uiLanguage),
+                                item.available,
+                                !!user,
+                              )}
+                              disabled={!user}
+                              onClick={() =>
+                                setCatalog((current) => ({
+                                  ...current,
+                                  items: current.items.map((row) =>
+                                    row.id === item.id
+                                      ? { ...row, available: !row.available }
+                                      : row,
+                                  ),
+                                }))
+                              }
+                            >
+                              <span />
+                              {item.available ? t.available : t.soldOut}
+                            </button>
+                            {user ? (
+                              <button
+                                className="admin-edit-button"
+                                type="button"
+                                onClick={() => {
+                                  setSelectedId(item.id);
+                                  setLanguage(uiLanguage);
+                                }}
+                              >
+                                {t.edit} <ChevronRight size={14} />
+                              </button>
+                            ) : (
+                              <span className="admin-readonly">
+                                {t.preview}
+                              </span>
+                            )}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="admin-empty">
+                          <p>{t.noMatches}</p>
+                          <button
+                            type="button"
+                            className="admin-text-button"
+                            onClick={() => {
+                              setSearch("");
+                              setFilter("all");
+                            }}
+                          >
+                            {t.showAll}
+                          </button>
+                        </div>
                       )}
                     </div>
-                  </div>
-                  <div className="admin-dish-list">
-                    <div className="admin-dish-head">
-                      <span>Dish</span>
-                      <span>Price</span>
-                      <span>Availability</span>
-                      <span />
-                    </div>
-                    {items.length ? (
-                      items.map((item) => (
-                        <div className="admin-dish-row" key={item.id}>
-                          <div className="admin-dish-identity">
-                            <img
-                              src={item.image}
-                              alt=""
-                              width={60}
-                              height={60}
-                              onError={(e) => {
-                                e.currentTarget.src = "/images/toast.jpg";
-                              }}
-                            />
-                            <div>
-                              <strong>{item.name.en}</strong>
-                              <span>
-                                {
-                                  categories.find((c) => c.id === item.category)
-                                    ?.name.en
-                                }
-                              </span>
-                            </div>
-                          </div>
-                          <span className="admin-dish-price">
-                            {money(item.price)} <small>MAD</small>
-                          </span>
-                          <button
-                            type="button"
-                            className={`admin-availability ${item.available ? "" : "unavailable"}`}
-                            aria-pressed={item.available}
-                            aria-label={`${item.name.en}: ${item.available ? "available" : "sold out"}${user ? ", toggle availability" : ""}`}
-                            disabled={!user}
-                            onClick={() =>
-                              setCatalog((current) => ({
-                                ...current,
-                                items: current.items.map((row) =>
-                                  row.id === item.id
-                                    ? { ...row, available: !row.available }
-                                    : row,
-                                ),
-                              }))
-                            }
-                          >
-                            <span />
-                            {item.available ? "Available" : "Sold out"}
-                          </button>
-                          {user ? (
-                            <button
-                              className="admin-edit-button"
-                              type="button"
-                              onClick={() => {
-                                setSelectedId(item.id);
-                                setLanguage("en");
-                              }}
-                            >
-                              Edit <ChevronRight size={14} />
-                            </button>
-                          ) : (
-                            <span className="admin-readonly">Preview</span>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="admin-empty">
-                        <p>No dishes match your search.</p>
-                        <button
-                          type="button"
-                          className="admin-text-button"
-                          onClick={() => {
-                            setSearch("");
-                            setFilter("all");
-                          }}
+                    {!user && <p className="admin-note">{t.sampleNote}</p>}
+                  </>
+                )}
+                {view === "menu" && selected && (
+                  <div className="admin-editor">
+                    <button
+                      className="admin-text-button"
+                      type="button"
+                      onClick={() => setSelectedId(null)}
+                    >
+                      <ArrowLeft size={15} />
+                      {t.backToDishes}
+                    </button>
+                    <div className="admin-editor-layout">
+                      <div className="admin-edit-fields">
+                        <div
+                          className="admin-language-tabs"
+                          aria-label={t.editTranslation}
                         >
-                          Show all dishes
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  {!user && (
-                    <p className="admin-note">
-                      Sample menu for Olive & Ember. Prices and dishes are
-                      editable after you sign in.
-                    </p>
-                  )}
-                </>
-              )}
-              {view === "menu" && selected && (
-                <div className="admin-editor">
-                  <button
-                    className="admin-text-button"
-                    type="button"
-                    onClick={() => setSelectedId(null)}
-                  >
-                    <ArrowLeft size={15} />
-                    Back to dishes
-                  </button>
-                  <div className="admin-editor-layout">
-                    <div className="admin-edit-fields">
-                      <div
-                        className="admin-language-tabs"
-                        aria-label="Edit translation"
-                      >
-                        {languages.map((lang) => (
+                          {languages.map((lang) => (
+                            <button
+                              type="button"
+                              className={language === lang.id ? "active" : ""}
+                              onClick={() => setLanguage(lang.id)}
+                              key={lang.id}
+                            >
+                              {lang.label}
+                            </button>
+                          ))}
+                        </div>
+                        <label className="admin-field">
+                          {t.dishName} ·{" "}
+                          {
+                            languages.find((lang) => lang.id === language)
+                              ?.label
+                          }
+                          <input
+                            dir={language === "ar" ? "rtl" : "ltr"}
+                            value={selected.name[language]}
+                            maxLength={100}
+                            onChange={(e) =>
+                              editItem({
+                                name: {
+                                  ...selected.name,
+                                  [language]: e.target.value,
+                                },
+                              })
+                            }
+                          />
+                        </label>
+                        <label className="admin-field">
+                          {t.description}
+                          <textarea
+                            dir={language === "ar" ? "rtl" : "ltr"}
+                            rows={3}
+                            value={selected.description[language]}
+                            maxLength={500}
+                            onChange={(e) =>
+                              editItem({
+                                description: {
+                                  ...selected.description,
+                                  [language]: e.target.value,
+                                },
+                              })
+                            }
+                          />
+                          <small>{t.translationHint}</small>
+                        </label>
+                        <div className="admin-field-pair">
+                          <label className="admin-field">
+                            {t.priceDh}
+                            <input
+                              type="number"
+                              inputMode="decimal"
+                              min="0"
+                              max="10000"
+                              step="0.01"
+                              value={selected.price / 100}
+                              onChange={(e) =>
+                                editItem({
+                                  price: Math.round(
+                                    Number(e.target.value) * 100,
+                                  ),
+                                })
+                              }
+                            />
+                          </label>
+                          <label className="admin-field">
+                            {t.section}
+                            <select
+                              value={selected.category}
+                              onChange={(e) =>
+                                editItem({
+                                  category: e.target.value as Category,
+                                })
+                              }
+                            >
+                              {categories.map((category) => (
+                                <option key={category.id} value={category.id}>
+                                  {label(category.name, uiLanguage)}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                        </div>
+                        <PhotoField
+                          key={selected.id}
+                          value={selected.image}
+                          onChange={(image) => editItem({ image })}
+                        />
+                        <label className="admin-field">
+                          {t.labels}
+                          <input
+                            value={selected.tags.join(", ")}
+                            onChange={(e) =>
+                              editItem({
+                                tags: e.target.value
+                                  .split(",")
+                                  .map((tag) => tag.trim())
+                                  .filter(Boolean),
+                              })
+                            }
+                            placeholder={t.labelsPlaceholder}
+                          />
+                          <small>{t.labelsHint}</small>
+                        </label>
+                        <label className="admin-checkbox">
+                          <input
+                            type="checkbox"
+                            checked={selected.available}
+                            onChange={(e) =>
+                              editItem({ available: e.target.checked })
+                            }
+                          />
+                          <span>{t.availableToOrder}</span>
+                        </label>
+                        <section className="admin-options">
+                          <div className="admin-section-title">
+                            <h2>{t.extrasTitle}</h2>
+                            <button
+                              type="button"
+                              className="admin-text-button"
+                              disabled={selected.options.length >= 12}
+                              onClick={() =>
+                                editItem({
+                                  options: [
+                                    ...selected.options,
+                                    {
+                                      id: newId(),
+                                      label: {
+                                        en: "",
+                                        fr: "",
+                                        ar: "",
+                                        [language]: t.newExtra,
+                                      },
+                                      price: 0,
+                                    },
+                                  ],
+                                })
+                              }
+                            >
+                              <Plus size={15} />
+                              {t.addExtra}
+                            </button>
+                          </div>
+                          {selected.options.length ? (
+                            selected.options.map((option, index) => (
+                              <div className="admin-option-row" key={option.id}>
+                                <label className="admin-field">
+                                  {t.extraName} · {language.toUpperCase()}
+                                  <input
+                                    dir={language === "ar" ? "rtl" : "ltr"}
+                                    value={option.label[language]}
+                                    maxLength={100}
+                                    onChange={(e) =>
+                                      editOption(index, {
+                                        label: {
+                                          ...option.label,
+                                          [language]: e.target.value,
+                                        },
+                                      })
+                                    }
+                                  />
+                                </label>
+                                <label className="admin-field">
+                                  {t.extraDh}
+                                  <input
+                                    type="number"
+                                    inputMode="decimal"
+                                    min="0"
+                                    max="10000"
+                                    step="0.01"
+                                    value={option.price / 100}
+                                    onChange={(e) =>
+                                      editOption(index, {
+                                        price: Math.round(
+                                          Number(e.target.value) * 100,
+                                        ),
+                                      })
+                                    }
+                                  />
+                                </label>
+                                <button
+                                  type="button"
+                                  className="admin-icon-button"
+                                  aria-label={t.removeExtra(
+                                    label(option.label, uiLanguage),
+                                  )}
+                                  onClick={() =>
+                                    editItem({
+                                      options: selected.options.filter(
+                                        (_, i) => i !== index,
+                                      ),
+                                    })
+                                  }
+                                >
+                                  <X size={17} />
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="admin-note">{t.noExtras}</p>
+                          )}
+                        </section>
+                        <div className="admin-editor-bottom">
                           <button
                             type="button"
-                            className={language === lang.id ? "active" : ""}
-                            onClick={() => setLanguage(lang.id)}
-                            key={lang.id}
+                            className="admin-danger-button"
+                            disabled={catalog.items.length < 2}
+                            onClick={deleteItem}
                           >
-                            {lang.label}
+                            <Trash2 size={15} />
+                            {t.deleteDish}
                           </button>
-                        ))}
+                          <button
+                            type="button"
+                            className="admin-secondary"
+                            onClick={() => setSelectedId(null)}
+                          >
+                            {t.doneEditing} <Check size={15} />
+                          </button>
+                        </div>
                       </div>
-                      <label className="admin-field">
-                        Dish name ·{" "}
-                        {languages.find((lang) => lang.id === language)?.label}
-                        <input
-                          dir={language === "ar" ? "rtl" : "ltr"}
-                          value={selected.name[language]}
-                          maxLength={100}
-                          onChange={(e) =>
-                            editItem({
-                              name: {
-                                ...selected.name,
-                                [language]: e.target.value,
-                              },
-                            })
-                          }
+                      <aside className="admin-item-preview">
+                        <img
+                          src={selected.image}
+                          alt={label(selected.name, language)}
+                          onError={(e) => {
+                            e.currentTarget.src = "/images/toast.jpg";
+                          }}
                         />
-                      </label>
-                      <label className="admin-field">
-                        Description
-                        <textarea
-                          dir={language === "ar" ? "rtl" : "ltr"}
-                          rows={3}
-                          value={selected.description[language]}
-                          maxLength={500}
-                          onChange={(e) =>
-                            editItem({
-                              description: {
-                                ...selected.description,
-                                [language]: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                        <small>
-                          Add the name and description in all three languages.
-                        </small>
-                      </label>
-                      <div className="admin-field-pair">
+                        <div dir={language === "ar" ? "rtl" : "ltr"}>
+                          <span className="admin-preview-label">
+                            {t.menuPreview}
+                          </span>
+                          {/* Shows exactly what customers see, fallbacks included. */}
+                          <h2>
+                            {label(selected.name, language) || t.previewName}
+                          </h2>
+                          <p>
+                            {label(selected.description, language) ||
+                              t.previewDescription}
+                          </p>
+                          <strong>
+                            {formatPrice(selected.price, language)}
+                          </strong>
+                          <span className="admin-preview-status">
+                            {selected.available
+                              ? t.availableToOrder
+                              : t.currentlySoldOut}
+                          </span>
+                        </div>
+                      </aside>
+                    </div>
+                  </div>
+                )}
+                {view === "categories" && (
+                  <CategoriesPanel
+                    categories={categories}
+                    items={catalog.items}
+                    editable={!!user}
+                    newId={newId}
+                    onChange={(next) => {
+                      setCatalog((current) => ({
+                        ...current,
+                        categories: next,
+                      }));
+                      if (!next.some((entry) => entry.id === filter))
+                        setFilter("all");
+                      setNotice("");
+                    }}
+                  />
+                )}
+                {view === "orders" && <OrdersPanel signedIn={!!user} />}
+                {view === "restaurant" && (
+                  <fieldset className="admin-settings" disabled={!user}>
+                    <section className="admin-setting-section">
+                      <div>
+                        <h2>{t.yourRestaurantTitle}</h2>
+                        <p>{t.yourRestaurantIntro}</p>
+                      </div>
+                      <div className="admin-setting-fields">
                         <label className="admin-field">
-                          Price (MAD)
+                          {t.restaurantName}
+                          <input
+                            maxLength={100}
+                            value={catalog.settings.name}
+                            onChange={(e) => setting("name", e.target.value)}
+                          />
+                        </label>
+                        <label className="admin-field">
+                          {t.tagline}
+                          <input
+                            maxLength={150}
+                            value={catalog.settings.tagline}
+                            onChange={(e) => setting("tagline", e.target.value)}
+                          />
+                        </label>
+                        <label className="admin-field">
+                          {t.about}
+                          <textarea
+                            rows={4}
+                            maxLength={1000}
+                            value={catalog.settings.description}
+                            onChange={(e) =>
+                              setting("description", e.target.value)
+                            }
+                          />
+                        </label>
+                      </div>
+                    </section>
+                    <section className="admin-setting-section">
+                      <div>
+                        <h2>{t.findTableTitle}</h2>
+                        <p>{t.findTableIntro}</p>
+                      </div>
+                      <div className="admin-setting-fields">
+                        <label className="admin-field">
+                          {t.address}
+                          <input
+                            maxLength={300}
+                            value={catalog.settings.address}
+                            onChange={(e) => setting("address", e.target.value)}
+                          />
+                        </label>
+                        <label className="admin-field">
+                          {t.hours}
+                          <input
+                            maxLength={300}
+                            value={catalog.settings.hours}
+                            onChange={(e) => setting("hours", e.target.value)}
+                          />
+                        </label>
+                      </div>
+                    </section>
+                    <section className="admin-setting-section">
+                      <div>
+                        <h2>{t.whatsappTitle}</h2>
+                        <p>{t.whatsappIntro}</p>
+                      </div>
+                      <div className="admin-setting-fields">
+                        <label className="admin-field">
+                          {t.whatsappNumber}
+                          <input
+                            type="tel"
+                            placeholder="212600000000"
+                            value={catalog.settings.whatsapp}
+                            onChange={(e) =>
+                              setting("whatsapp", e.target.value)
+                            }
+                          />
+                          <small>{t.whatsappHint}</small>
+                        </label>
+                        <label className="admin-field">
+                          {t.deliveryFee}
                           <input
                             type="number"
                             inputMode="decimal"
                             min="0"
-                            max="10000"
+                            max="1000"
                             step="0.01"
-                            value={selected.price / 100}
+                            value={catalog.settings.deliveryFee / 100}
                             onChange={(e) =>
-                              editItem({
-                                price: Math.round(Number(e.target.value) * 100),
-                              })
+                              setting(
+                                "deliveryFee",
+                                Math.round(Number(e.target.value) * 100),
+                              )
                             }
                           />
                         </label>
-                        <label className="admin-field">
-                          Category
-                          <select
-                            value={selected.category}
-                            onChange={(e) =>
-                              editItem({ category: e.target.value as Category })
-                            }
-                          >
-                            {categories.map((category) => (
-                              <option key={category.id} value={category.id}>
-                                {category.name.en}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
+                        <p className="admin-note">{t.pricesInDh}</p>
                       </div>
-                      <PhotoField
-                        key={selected.id}
-                        value={selected.image}
-                        onChange={(image) => editItem({ image })}
-                      />
-                      <label className="admin-field">
-                        Labels
-                        <input
-                          value={selected.tags.join(", ")}
-                          onChange={(e) =>
-                            editItem({
-                              tags: e.target.value
-                                .split(",")
-                                .map((tag) => tag.trim())
-                                .filter(Boolean),
-                            })
-                          }
-                          placeholder="vegetarian, popular"
-                        />
-                        <small>
-                          Separate labels with commas. Examples: vegetarian,
-                          vegan, popular, signature.
-                        </small>
-                      </label>
-                      <label className="admin-checkbox">
-                        <input
-                          type="checkbox"
-                          checked={selected.available}
-                          onChange={(e) =>
-                            editItem({ available: e.target.checked })
-                          }
-                        />
-                        <span>Available to order</span>
-                      </label>
-                      <section className="admin-options">
-                        <div className="admin-section-title">
-                          <h2>Extras & options</h2>
-                          <button
-                            type="button"
+                    </section>
+                    <section className="admin-setting-section">
+                      <div>
+                        <h2>{t.publicMenuTitle}</h2>
+                        <p>{t.publicMenuIntro}</p>
+                        {user && (
+                          <a
                             className="admin-text-button"
-                            disabled={selected.options.length >= 12}
-                            onClick={() =>
-                              editItem({
-                                options: [
-                                  ...selected.options,
-                                  {
-                                    id: newId(),
-                                    label: {
-                                      en: "New extra",
-                                      fr: "Nouveau supplément",
-                                      ar: "إضافة جديدة",
-                                    },
-                                    price: 0,
-                                  },
-                                ],
-                              })
-                            }
+                            href={publicLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
-                            <Plus size={15} />
-                            Add extra
-                          </button>
-                        </div>
-                        {selected.options.length ? (
-                          selected.options.map((option, index) => (
-                            <div className="admin-option-row" key={option.id}>
-                              <label className="admin-field">
-                                Name · {language.toUpperCase()}
-                                <input
-                                  dir={language === "ar" ? "rtl" : "ltr"}
-                                  value={option.label[language]}
-                                  maxLength={100}
-                                  onChange={(e) =>
-                                    editOption(index, {
-                                      label: {
-                                        ...option.label,
-                                        [language]: e.target.value,
-                                      },
-                                    })
-                                  }
-                                />
-                              </label>
-                              <label className="admin-field">
-                                Extra (MAD)
-                                <input
-                                  type="number"
-                                  inputMode="decimal"
-                                  min="0"
-                                  max="10000"
-                                  step="0.01"
-                                  value={option.price / 100}
-                                  onChange={(e) =>
-                                    editOption(index, {
-                                      price: Math.round(
-                                        Number(e.target.value) * 100,
-                                      ),
-                                    })
-                                  }
-                                />
-                              </label>
-                              <button
-                                type="button"
-                                className="admin-icon-button"
-                                aria-label={`Remove ${option.label.en}`}
-                                onClick={() =>
-                                  editItem({
-                                    options: selected.options.filter(
-                                      (_, i) => i !== index,
-                                    ),
-                                  })
-                                }
-                              >
-                                <X size={17} />
-                              </button>
-                            </div>
-                          ))
-                        ) : (
-                          <p className="admin-note">
-                            No extras for this dish. Add milk choices, toppings,
-                            or other optional additions.
-                          </p>
+                            {t.openCustomerMenu} <ExternalLink size={14} />
+                          </a>
                         )}
-                      </section>
-                      <div className="admin-editor-bottom">
-                        <button
-                          type="button"
-                          className="admin-danger-button"
-                          disabled={catalog.items.length < 2}
-                          onClick={deleteItem}
-                        >
-                          <Trash2 size={15} />
-                          Delete dish
-                        </button>
-                        <button
-                          type="button"
-                          className="admin-secondary"
-                          onClick={() => setSelectedId(null)}
-                        >
-                          Done editing <Check size={15} />
-                        </button>
                       </div>
-                    </div>
-                    <aside className="admin-item-preview">
-                      <img
-                        src={selected.image}
-                        alt={selected.name[language]}
-                        onError={(e) => {
-                          e.currentTarget.src = "/images/toast.jpg";
-                        }}
-                      />
-                      <div dir={language === "ar" ? "rtl" : "ltr"}>
-                        <span className="admin-preview-label">
-                          Menu preview
-                        </span>
-                        <h2>{selected.name[language] || "Your dish name"}</h2>
-                        <p>
-                          {selected.description[language] ||
-                            "Your dish description will appear here."}
-                        </p>
-                        <strong>{money(selected.price)} MAD</strong>
-                        <span className="admin-preview-status">
-                          {selected.available
-                            ? "Available to order"
-                            : "Currently sold out"}
-                        </span>
-                      </div>
-                    </aside>
-                  </div>
-                </div>
-              )}
-              {view === "categories" && (
-                <CategoriesPanel
-                  categories={categories}
-                  items={catalog.items}
-                  editable={!!user}
-                  newId={newId}
-                  onChange={(next) => {
-                    setCatalog((current) => ({ ...current, categories: next }));
-                    if (!next.some((entry) => entry.id === filter))
-                      setFilter("all");
-                    setNotice("");
-                  }}
-                />
-              )}
-              {view === "orders" && <OrdersPanel signedIn={!!user} />}
-              {view === "restaurant" && (
-                <fieldset className="admin-settings" disabled={!user}>
-                  <section className="admin-setting-section">
-                    <div>
-                      <h2>Your restaurant</h2>
-                      <p>
-                        Make the menu feel like your place, from the first hello
-                        to the last coffee.
-                      </p>
-                    </div>
-                    <div className="admin-setting-fields">
-                      <label className="admin-field">
-                        Restaurant name
-                        <input
-                          maxLength={100}
-                          value={catalog.settings.name}
-                          onChange={(e) => setting("name", e.target.value)}
-                        />
-                      </label>
-                      <label className="admin-field">
-                        Tagline
-                        <input
-                          maxLength={150}
-                          value={catalog.settings.tagline}
-                          onChange={(e) => setting("tagline", e.target.value)}
-                        />
-                      </label>
-                      <label className="admin-field">
-                        About the restaurant
-                        <textarea
-                          rows={4}
-                          maxLength={1000}
-                          value={catalog.settings.description}
-                          onChange={(e) =>
-                            setting("description", e.target.value)
-                          }
-                        />
-                      </label>
-                    </div>
-                  </section>
-                  <section className="admin-setting-section">
-                    <div>
-                      <h2>Find your table</h2>
-                      <p>
-                        Help guests plan a visit. Include your neighborhood and
-                        any days you are closed.
-                      </p>
-                    </div>
-                    <div className="admin-setting-fields">
-                      <label className="admin-field">
-                        Address
-                        <input
-                          maxLength={300}
-                          value={catalog.settings.address}
-                          onChange={(e) => setting("address", e.target.value)}
-                        />
-                      </label>
-                      <label className="admin-field">
-                        Opening hours
-                        <input
-                          maxLength={300}
-                          value={catalog.settings.hours}
-                          onChange={(e) => setting("hours", e.target.value)}
-                        />
-                      </label>
-                    </div>
-                  </section>
-                  <section className="admin-setting-section">
-                    <div>
-                      <h2>WhatsApp ordering</h2>
-                      <p>
-                        Orders arrive as messages for your team to confirm.
-                        Customers pay you directly.
-                      </p>
-                    </div>
-                    <div className="admin-setting-fields">
-                      <label className="admin-field">
-                        WhatsApp number
-                        <input
-                          type="tel"
-                          placeholder="212600000000"
-                          value={catalog.settings.whatsapp}
-                          onChange={(e) => setting("whatsapp", e.target.value)}
-                        />
-                        <small>
-                          Include the country code. Leave blank to keep ordering
-                          in demo mode.
-                        </small>
-                      </label>
-                      <label className="admin-field">
-                        Delivery fee (MAD)
-                        <input
-                          type="number"
-                          inputMode="decimal"
-                          min="0"
-                          max="1000"
-                          step="0.01"
-                          value={catalog.settings.deliveryFee / 100}
-                          onChange={(e) =>
-                            setting(
-                              "deliveryFee",
-                              Math.round(Number(e.target.value) * 100),
-                            )
-                          }
-                        />
-                      </label>
-                      <p className="admin-note">
-                        All menu prices use Moroccan dirhams (MAD).
-                      </p>
-                    </div>
-                  </section>
-                  <section className="admin-setting-section">
-                    <div>
-                      <h2>Your public menu</h2>
-                      <p>
-                        Use your published website address for printable QR
-                        codes.
-                      </p>
-                      {user && (
-                        <a
-                          className="admin-text-button"
-                          href={publicLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Open customer menu <ExternalLink size={14} />
-                        </a>
-                      )}
-                    </div>
-                    <div className="admin-setting-fields">
-                      <label className="admin-field">
-                        Menu link name
-                        <div className="admin-slug-input">
-                          <span>/menu?shop=</span>
+                      <div className="admin-setting-fields">
+                        <label className="admin-field">
+                          {t.linkName}
+                          <div className="admin-slug-input">
+                            <span>/menu?shop=</span>
+                            <input
+                              maxLength={60}
+                              placeholder={slugify(catalog.settings.name)}
+                              value={catalog.settings.slug}
+                              onChange={(e) =>
+                                setting("slug", e.target.value.toLowerCase())
+                              }
+                              aria-invalid={
+                                !!catalog.settings.slug &&
+                                !SLUG_PATTERN.test(catalog.settings.slug)
+                              }
+                            />
+                          </div>
+                          <small>{t.linkNameHint}</small>
+                        </label>
+                        {!catalog.settings.slug &&
+                          slugify(catalog.settings.name).length >= 3 && (
+                            <button
+                              type="button"
+                              className="admin-text-button admin-slug-suggest"
+                              onClick={() =>
+                                setting("slug", slugify(catalog.settings.name))
+                              }
+                            >
+                              {t.useSuggestion(slugify(catalog.settings.name))}
+                            </button>
+                          )}
+                        <label className="admin-field">
+                          {t.websiteAddress}
                           <input
-                            maxLength={60}
-                            placeholder={slugify(catalog.settings.name)}
-                            value={catalog.settings.slug}
+                            type="url"
+                            placeholder="https://your-cafe.com"
+                            value={catalog.settings.publicUrl}
                             onChange={(e) =>
-                              setting("slug", e.target.value.toLowerCase())
-                            }
-                            aria-invalid={
-                              !!catalog.settings.slug &&
-                              !SLUG_PATTERN.test(catalog.settings.slug)
+                              setting("publicUrl", e.target.value)
                             }
                           />
-                        </div>
-                        <small>
-                          A short name for your QR codes and links, like
-                          olive-and-ember. Older links keep working after you
-                          change it.
-                        </small>
-                      </label>
-                      {!catalog.settings.slug &&
-                        slugify(catalog.settings.name).length >= 3 && (
-                          <button
-                            type="button"
-                            className="admin-text-button admin-slug-suggest"
-                            onClick={() =>
-                              setting("slug", slugify(catalog.settings.name))
-                            }
-                          >
-                            Use “{slugify(catalog.settings.name)}”
-                          </button>
-                        )}
-                      <label className="admin-field">
-                        Website address
-                        <input
-                          type="url"
-                          placeholder="https://your-cafe.com"
-                          value={catalog.settings.publicUrl}
-                          onChange={(e) => setting("publicUrl", e.target.value)}
-                        />
-                        <small>
-                          Leave blank to use the current website address.
-                        </small>
-                      </label>
-                    </div>
-                  </section>
-                </fieldset>
-              )}
-              {view === "qr" && (
-                <>
-                  <QrPanel
-                    shopId={shopId}
-                    publicUrl={saved.settings.publicUrl}
-                    restaurantName={saved.settings.name}
-                  />
-                  {user && saved.revision === 0 && (
-                    <p className="admin-notice">
-                      Save your restaurant before sharing this code. Your menu
-                      is not published yet.
-                    </p>
-                  )}
-                </>
-              )}
-            </>
-          )}
-        </main>
+                          <small>{t.websiteHint}</small>
+                        </label>
+                      </div>
+                    </section>
+                  </fieldset>
+                )}
+                {view === "qr" && (
+                  <>
+                    <QrPanel
+                      shopId={shopId}
+                      publicUrl={saved.settings.publicUrl}
+                      restaurantName={saved.settings.name}
+                    />
+                    {user && saved.revision === 0 && (
+                      <p className="admin-notice">{t.saveBeforeSharing}</p>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </main>
+        </div>
       </div>
-    </div>
+    </AdminCopyContext.Provider>
   );
 }

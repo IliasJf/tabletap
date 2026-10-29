@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Mail } from "lucide-react";
+import { useAdminCopy } from "./admin-copy";
 
 const RESEND_AFTER_S = 60;
 
@@ -12,8 +13,7 @@ async function post<T>(path: string, body: unknown): Promise<T> {
     body: JSON.stringify(body),
   });
   const data = (await response.json()) as T & { error?: string };
-  if (!response.ok)
-    throw new Error(data.error || "Something went wrong. Please try again.");
+  if (!response.ok) throw new Error(data.error || "");
   return data;
 }
 
@@ -23,6 +23,7 @@ export default function SignInPanel({
 }: {
   onSignedIn: () => void;
 }) {
+  const { t } = useAdminCopy();
   const [step, setStep] = useState<"email" | "code">("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -52,7 +53,9 @@ export default function SignInPanel({
       setWait(RESEND_AFTER_S);
       setTimeout(() => codeInput.current?.focus(), 0);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Please try again.");
+      setError(
+        cause instanceof Error && cause.message ? cause.message : t.tryAgain,
+      );
     } finally {
       setBusy(false);
     }
@@ -66,7 +69,9 @@ export default function SignInPanel({
       await post("/api/auth/verify", { email, code });
       onSignedIn();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Please try again.");
+      setError(
+        cause instanceof Error && cause.message ? cause.message : t.tryAgain,
+      );
       setBusy(false);
     }
   }
@@ -74,17 +79,13 @@ export default function SignInPanel({
   return (
     <section className="admin-signin">
       <div>
-        <h2>A home for your own menu.</h2>
-        <p>
-          Explore the demo below. Sign in with your email to edit dishes, set up
-          WhatsApp orders, and save a menu that belongs to your restaurant. No
-          password needed.
-        </p>
+        <h2>{t.signInTitle}</h2>
+        <p>{t.signInIntro}</p>
       </div>
       {step === "email" ? (
         <form className="admin-signin-form" onSubmit={sendCode}>
           <label className="admin-field">
-            Your email
+            {t.yourEmail}
             <input
               type="email"
               autoComplete="email"
@@ -98,13 +99,13 @@ export default function SignInPanel({
           </label>
           <button type="submit" className="admin-primary" disabled={busy}>
             <Mail size={16} />
-            {busy ? "Sending…" : "Email me a code"}
+            {busy ? t.sending : t.emailMeCode}
           </button>
         </form>
       ) : (
         <form className="admin-signin-form" onSubmit={verify}>
           <label className="admin-field">
-            6-digit code
+            {t.codeLabel}
             <input
               ref={codeInput}
               className="admin-code-input"
@@ -116,14 +117,11 @@ export default function SignInPanel({
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
             />
-            <small>
-              We sent it to <strong>{email}</strong>. It expires in 10 minutes.
-            </small>
+            <small>{t.codeSent(email)}</small>
           </label>
           {devCode && (
             <p className="admin-notice" role="status">
-              Email isn&apos;t connected here, so here is your code:{" "}
-              <strong>{devCode}</strong>
+              {t.codeShown} <strong>{devCode}</strong>
             </p>
           )}
           <button
@@ -131,7 +129,7 @@ export default function SignInPanel({
             className="admin-primary"
             disabled={busy || code.length !== 6}
           >
-            {busy ? "Checking…" : "Sign in"}
+            {busy ? t.checking : t.signIn}
             <ArrowRight size={16} />
           </button>
           <div className="admin-signin-links">
@@ -144,7 +142,7 @@ export default function SignInPanel({
               }}
             >
               <ArrowLeft size={14} />
-              Use another email
+              {t.otherEmail}
             </button>
             <button
               type="button"
@@ -152,7 +150,7 @@ export default function SignInPanel({
               disabled={busy || wait > 0}
               onClick={() => void sendCode()}
             >
-              {wait > 0 ? `Send a new code in ${wait}s` : "Send a new code"}
+              {wait > 0 ? t.newCodeIn(wait) : t.newCode}
             </button>
           </div>
         </form>

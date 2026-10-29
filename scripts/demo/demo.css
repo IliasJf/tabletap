@@ -24,9 +24,12 @@
 }
 .demo-badge button,
 .demo-badge a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   border: 0;
   background: none;
-  padding: 0;
+  padding: 0 4px;
   color: inherit;
   font: inherit;
   text-decoration: underline;

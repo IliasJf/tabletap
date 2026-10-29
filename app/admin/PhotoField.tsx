@@ -3,6 +3,10 @@
 import { useRef, useState } from "react";
 import { ImageUp, Link2 } from "lucide-react";
 import { MAX_IMAGE_BYTES } from "../../lib/images";
+import { useAdminCopy } from "./admin-copy";
+
+/** Thrown when even the smallest JPEG is over the server's limit. */
+class PhotoTooDetailed extends Error {}
 
 const MAX_EDGE = 1200;
 
@@ -21,7 +25,7 @@ async function resizePhoto(file: File): Promise<Blob> {
     );
     if (blob && blob.size <= MAX_IMAGE_BYTES) return blob;
   }
-  throw new Error("This photo is too detailed to upload. Try another one.");
+  throw new PhotoTooDetailed();
 }
 
 export default function PhotoField({
@@ -31,6 +35,7 @@ export default function PhotoField({
   value: string;
   onChange: (url: string) => void;
 }) {
+  const { t } = useAdminCopy();
   const input = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -50,13 +55,15 @@ export default function PhotoField({
       });
       const data = (await response.json()) as { url?: string; error?: string };
       if (!response.ok || !data.url)
-        throw new Error(data.error || "The photo could not be uploaded.");
+        throw new Error(data.error || t.photoFailed);
       onChange(data.url);
     } catch (cause) {
       setError(
-        cause instanceof Error && cause.message
-          ? cause.message
-          : "The photo could not be uploaded. Try a JPEG or PNG.",
+        cause instanceof PhotoTooDetailed
+          ? t.photoTooDetailed
+          : cause instanceof Error && cause.message
+            ? cause.message
+            : t.photoFailed,
       );
     } finally {
       setUploading(false);
@@ -66,7 +73,7 @@ export default function PhotoField({
 
   return (
     <div className="admin-field admin-photo-field">
-      <span>Photo</span>
+      <span>{t.photo}</span>
       <div className="admin-photo-actions">
         <button
           type="button"
@@ -75,7 +82,7 @@ export default function PhotoField({
           disabled={uploading}
         >
           <ImageUp size={16} />
-          {uploading ? "Uploading…" : "Upload a photo"}
+          {uploading ? t.uploading : t.uploadPhoto}
         </button>
         <button
           type="button"
@@ -84,7 +91,7 @@ export default function PhotoField({
           aria-expanded={showLink}
         >
           <Link2 size={15} />
-          Use a link instead
+          {t.useLink}
         </button>
       </div>
       <input
@@ -99,7 +106,7 @@ export default function PhotoField({
       />
       {showLink && (
         <input
-          aria-label="Photo link"
+          aria-label={t.photoLink}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="https://…"
@@ -110,10 +117,7 @@ export default function PhotoField({
           {error}
         </small>
       ) : (
-        <small>
-          Take or choose a photo. We resize it for the menu. Save your menu to
-          publish it.
-        </small>
+        <small>{t.photoHint}</small>
       )}
     </div>
   );

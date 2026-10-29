@@ -11,6 +11,7 @@ import {
   QrCode,
 } from "lucide-react";
 import "../admin/admin.css";
+import { useAdminCopy } from "../admin/admin-copy";
 
 export interface QrPanelProps {
   shopId?: string;
@@ -23,11 +24,12 @@ export default function QrPanel({
   publicUrl,
   restaurantName = "Olive & Ember",
 }: QrPanelProps) {
+  const { t } = useAdminCopy();
   const [base, setBase] = useState(publicUrl || "");
   const [table, setTable] = useState("");
   const [svg, setSvg] = useState("");
   const [feedback, setFeedback] = useState("");
-  const [qrError, setQrError] = useState("");
+  const [qrTooLong, setQrTooLong] = useState(false);
   useEffect(() => {
     // The site root, including any path the app is served under (e.g. /tabletap/).
     setBase(
@@ -39,7 +41,7 @@ export default function QrPanel({
     if (!base.trim())
       return {
         url: "",
-        error: "Enter the website address for your menu.",
+        error: "qrErrAddress" as const,
         local: false,
       };
     if (
@@ -48,7 +50,7 @@ export default function QrPanel({
     )
       return {
         url: "",
-        error: "Choose a table number from 1 to 99, or leave it blank.",
+        error: "qrErrTable" as const,
         local: false,
       };
     try {
@@ -67,11 +69,11 @@ export default function QrPanel({
       url.hash = "";
       if (shopId) url.searchParams.set("shop", shopId);
       if (table) url.searchParams.set("table", String(Number(table)));
-      return { url: url.toString(), error: "", local };
+      return { url: url.toString(), error: null, local };
     } catch {
       return {
         url: "",
-        error: "Enter a complete HTTPS website address.",
+        error: "qrErrHttps" as const,
         local: false,
       };
     }
@@ -80,7 +82,7 @@ export default function QrPanel({
   useEffect(() => {
     let active = true;
     setSvg("");
-    setQrError("");
+    setQrTooLong(false);
     setFeedback("");
     if (result.url) {
       QRCode.toString(result.url, {
@@ -94,10 +96,7 @@ export default function QrPanel({
           if (active) setSvg(value);
         })
         .catch(() => {
-          if (active)
-            setQrError(
-              "The address is too long to turn into a QR code. Use a shorter website address.",
-            );
+          if (active) setQrTooLong(true);
         });
     }
     return () => {
@@ -114,28 +113,25 @@ export default function QrPanel({
     link.download = `tabletap-menu${table ? `-table-${Number(table)}` : ""}.svg`;
     link.click();
     setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-    setFeedback("QR code downloaded.");
+    setFeedback(t.qrDownloaded);
   }
 
   async function copy() {
     try {
       await navigator.clipboard.writeText(result.url);
-      setFeedback("Menu link copied.");
+      setFeedback(t.qrCopied);
     } catch {
-      setFeedback("Select and copy the menu link below.");
+      setFeedback(t.qrSelectCopy);
     }
   }
 
   return (
     <div className="admin-qr-layout">
       <div className="admin-qr-settings">
-        <h2>A menu on every table.</h2>
-        <p>
-          Customers scan, choose their food, and send their order on WhatsApp.
-          Your QR code keeps working when you update the menu.
-        </p>
+        <h2>{t.qrTitle}</h2>
+        <p>{t.qrIntro}</p>
         <label className="admin-field">
-          Public website address
+          {t.qrAddress}
           <input
             type="url"
             value={base}
@@ -145,7 +141,7 @@ export default function QrPanel({
           />
         </label>
         <label className="admin-field">
-          Table number <span className="admin-optional">optional</span>
+          {t.qrTable} <span className="admin-optional">{t.qrOptional}</span>
           <input
             inputMode="numeric"
             type="number"
@@ -153,29 +149,17 @@ export default function QrPanel({
             max="99"
             value={table}
             onChange={(e) => setTable(e.target.value)}
-            placeholder="For example, 5"
+            placeholder={t.qrTablePlaceholder}
           />
-          <small>
-            Leave blank for a takeaway menu, or add a number for a table card.
-          </small>
+          <small>{t.qrTableHint}</small>
         </label>
-        {(result.error || qrError) && (
+        {(result.error || qrTooLong) && (
           <p className="admin-error" role="alert">
-            {result.error || qrError}
+            {result.error ? t[result.error] : t.qrErrLong}
           </p>
         )}
-        {result.local && (
-          <p className="admin-notice">
-            This is a local preview address. Enter your published website
-            address before printing a QR code for customers.
-          </p>
-        )}
-        {!shopId && (
-          <p className="admin-note">
-            This QR code opens the demo menu. Sign in and save your restaurant
-            to create your own menu link.
-          </p>
-        )}
+        {result.local && <p className="admin-notice">{t.qrLocal}</p>}
+        {!shopId && <p className="admin-note">{t.qrDemo}</p>}
         <div className="admin-qr-actions">
           <button
             className="admin-primary"
@@ -183,7 +167,7 @@ export default function QrPanel({
             onClick={download}
             disabled={!svg}
           >
-            <Download size={16} /> Download SVG
+            <Download size={16} /> {t.qrDownload}
           </button>
           <button
             className="admin-secondary"
@@ -191,7 +175,7 @@ export default function QrPanel({
             onClick={() => window.print()}
             disabled={!svg}
           >
-            <Printer size={16} /> Print table card
+            <Printer size={16} /> {t.qrPrint}
           </button>
         </div>
         {result.url && (
@@ -200,7 +184,7 @@ export default function QrPanel({
               {result.url}
               <ExternalLink size={14} />
             </a>
-            <button type="button" onClick={copy} aria-label="Copy menu link">
+            <button type="button" onClick={copy} aria-label={t.qrCopy}>
               <Copy size={17} />
             </button>
           </div>
@@ -217,13 +201,16 @@ export default function QrPanel({
         <div className="admin-qr-card">
           <p className="admin-qr-name">{restaurantName}</p>
           <p className="admin-qr-headline">
-            Something good
-            <br />
-            is on the menu.
+            {t.qrHeadline.split("\n").map((line, i) => (
+              <span key={i}>
+                {i > 0 && <br />}
+                {line}
+              </span>
+            ))}
           </p>
           <div
             className="admin-qr-code"
-            aria-label={svg ? "QR code for the menu" : "QR code preview"}
+            aria-label={svg ? t.qrCode : t.qrPreview}
           >
             {svg ? (
               <div dangerouslySetInnerHTML={{ __html: svg }} />
@@ -231,17 +218,17 @@ export default function QrPanel({
               <QrCode size={120} strokeWidth={1} />
             )}
           </div>
-          <p className="admin-qr-instruction">Scan to explore & order</p>
+          <p className="admin-qr-instruction">{t.qrInstruction}</p>
           <p className="admin-qr-table">
             {table && !result.error
-              ? `Table ${Number(table)}`
-              : "Made for slow moments."}
+              ? t.qrCardTable(Number(table))
+              : t.qrCardTagline}
           </p>
           <div className="admin-qr-brand">
-            Menu by <strong>TableTap</strong>
+            {t.qrMenuBy} <strong>TableTap</strong>
           </div>
         </div>
-        <span className="admin-preview-caption">Your printable table card</span>
+        <span className="admin-preview-caption">{t.qrCaption}</span>
       </div>
     </div>
   );

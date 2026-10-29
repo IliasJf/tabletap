@@ -37,7 +37,10 @@ import type {
   OrderDetails,
   OrderType,
 } from "../../lib/types";
+import { pickText } from "../../lib/text";
 import { copy } from "./copy";
+
+const NAME_KEY = "tabletap:customer-name";
 
 function Mark() {
   return (
@@ -103,8 +106,12 @@ function Modal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (open && !el.open) el.showModal();
-    else if (!open && el.open) el.close();
+    if (open && !el.open) {
+      el.showModal();
+      // Start on the dialog, not its close button: no focus ring on phones,
+      // and keyboard users reach every control with Tab.
+      el.querySelector<HTMLElement>(".modal-inside")?.focus();
+    } else if (!open && el.open) el.close();
     if (open) {
       const old = document.body.style.overflow;
       document.body.style.overflow = "hidden";
@@ -123,7 +130,9 @@ function Modal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="modal-inside">{children}</div>
+      <div className="modal-inside" tabIndex={-1}>
+        {children}
+      </div>
     </dialog>
   );
 }
@@ -160,6 +169,7 @@ export default function Restaurant({
     [notice, setNotice] = useState(""),
     [copied, setCopied] = useState(false),
     [orderId, setOrderId] = useState("");
+  const DishHeading = menuOnly ? "h2" : "h3";
   const t = copy[language],
     restaurantName = catalog.settings.name || "TableTap",
     totals = calculateCart(
@@ -204,6 +214,9 @@ export default function Restaurant({
       const saved = localStorage.getItem("tabletap:language");
       if (saved === "en" || saved === "fr" || saved === "ar")
         setLanguage(saved);
+      // Regulars don't retype their name; it never leaves this phone.
+      const name = localStorage.getItem(NAME_KEY);
+      if (name) setDetails((d) => (d.name ? d : { ...d, name }));
     } catch {}
     setLoading(true);
     setError("");
@@ -267,7 +280,7 @@ export default function Restaurant({
       (!vegetarian ||
         item.tags.includes("vegetarian") ||
         item.tags.includes("vegan")) &&
-      `${item.name[language]} ${item.description[language]} ${item.name.en}`
+      `${pickText(item.name, language)} ${pickText(item.description, language)} ${pickText(item.name, "en")}`
         .toLocaleLowerCase()
         .includes(search.trim().toLocaleLowerCase()),
   );
@@ -297,6 +310,9 @@ export default function Restaurant({
     try {
       setMessage(buildWhatsAppMessage(cart, catalog, details, language));
       setOrderId(crypto.randomUUID().replaceAll("-", ""));
+      try {
+        localStorage.setItem(NAME_KEY, details.name.trim());
+      } catch {}
       setFormError("");
       setCopied(false);
     } catch (err) {
@@ -475,7 +491,7 @@ export default function Restaurant({
                 { id: "all", label: t.all },
                 ...menuCategories.map((entry) => ({
                   id: entry.id,
-                  label: entry.name[language],
+                  label: pickText(entry.name, language),
                 })),
               ].map(({ id, label }) => (
                 <button
@@ -554,13 +570,19 @@ export default function Restaurant({
                     className="menu-image-button"
                     disabled={!item.available}
                     onClick={() => pick(item)}
-                    aria-label={`${t.customize}: ${item.name[language]}`}
+                    aria-label={`${t.customize}: ${pickText(item.name, language)}`}
                   >
-                    <Photo src={item.image} alt={item.name[language]} />
+                    <Photo
+                      src={item.image}
+                      alt={pickText(item.name, language)}
+                    />
                   </button>
                   <div className="menu-item-content">
                     <div className="menu-item-title">
-                      <h3>{item.name[language]}</h3>
+                      {/* Dishes sit under the page's H1 on /menu, under an H2 on the homepage. */}
+                      <DishHeading className="menu-item-name">
+                        {pickText(item.name, language)}
+                      </DishHeading>
                       {(item.tags.includes("vegetarian") ||
                         item.tags.includes("vegan")) && (
                         <Leaf
@@ -570,14 +592,14 @@ export default function Restaurant({
                         />
                       )}
                     </div>
-                    <p>{item.description[language]}</p>
+                    <p>{pickText(item.description, language)}</p>
                     <div className="menu-item-bottom">
                       <strong>{formatPrice(item.price, language)}</strong>
                       <button
                         className="add-button"
                         disabled={!item.available}
                         onClick={() => pick(item)}
-                        aria-label={`${t.add} ${item.name[language]}`}
+                        aria-label={`${t.add} ${pickText(item.name, language)}`}
                       >
                         {item.available ? (
                           <>
@@ -702,7 +724,11 @@ export default function Restaurant({
         {selected && (
           <>
             <div className="item-modal-photo">
-              <Photo src={selected.image} alt={selected.name[language]} eager />
+              <Photo
+                src={selected.image}
+                alt={pickText(selected.name, language)}
+                eager
+              />
               <button
                 className="close-button"
                 onClick={() => setSelected(null)}
@@ -713,10 +739,10 @@ export default function Restaurant({
             </div>
             <div className="item-modal-body">
               <div className="modal-title-row">
-                <h2>{selected.name[language]}</h2>
+                <h2>{pickText(selected.name, language)}</h2>
                 <strong>{formatPrice(selected.price, language)}</strong>
               </div>
-              <p>{selected.description[language]}</p>
+              <p>{pickText(selected.description, language)}</p>
               {selected.options.length > 0 && (
                 <fieldset className="extras">
                   <legend>{t.extras}</legend>
@@ -733,7 +759,7 @@ export default function Restaurant({
                           )
                         }
                       />
-                      <span>{option.label[language]}</span>
+                      <span>{pickText(option.label, language)}</span>
                       <strong>+{formatPrice(option.price, language)}</strong>
                     </label>
                   ))}
@@ -850,22 +876,27 @@ export default function Restaurant({
             <div className="cart-lines">
               {totals.lines.map((line) => (
                 <div className="cart-line" key={line.key}>
-                  <Photo src={line.item.image} alt={line.item.name[language]} />
+                  <Photo
+                    src={line.item.image}
+                    alt={pickText(line.item.name, language)}
+                  />
                   <div className="cart-line-body">
                     <div className="cart-line-title">
-                      <h3>{line.item.name[language]}</h3>
+                      <h3>{pickText(line.item.name, language)}</h3>
                       <strong>{formatPrice(line.total, language)}</strong>
                     </div>
                     {line.options.length > 0 && (
                       <p>
-                        {line.options.map((o) => o.label[language]).join(", ")}
+                        {line.options
+                          .map((o) => pickText(o.label, language))
+                          .join(", ")}
                       </p>
                     )}
                     <div className="cart-line-controls">
                       <div className="quantity-control">
                         <button
                           type="button"
-                          aria-label={`Remove one ${line.item.name[language]}`}
+                          aria-label={`Remove one ${pickText(line.item.name, language)}`}
                           onClick={() =>
                             changeQuantity(line.key, line.quantity - 1)
                           }
@@ -875,7 +906,7 @@ export default function Restaurant({
                         <output>{line.quantity}</output>
                         <button
                           type="button"
-                          aria-label={`Add one ${line.item.name[language]}`}
+                          aria-label={`Add one ${pickText(line.item.name, language)}`}
                           disabled={line.quantity >= 99}
                           onClick={() =>
                             changeQuantity(line.key, line.quantity + 1)
@@ -887,7 +918,7 @@ export default function Restaurant({
                       <button
                         className="remove-line"
                         type="button"
-                        aria-label={`Remove ${line.item.name[language]}`}
+                        aria-label={`Remove ${pickText(line.item.name, language)}`}
                         onClick={() => changeQuantity(line.key, 0)}
                       >
                         <X size={15} />

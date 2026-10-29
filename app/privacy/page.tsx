@@ -47,7 +47,7 @@ const notices: Record<Language, Notice> = {
       {
         title: "In your browser",
         body: [
-          "Your cart and language are saved on your device only. Owners get one sign-in cookie. There are no advertising or tracking cookies.",
+          "Your cart, language and name (so you don’t retype it) are saved on your device only. Owners get one sign-in cookie. There are no advertising or tracking cookies.",
         ],
       },
       {
@@ -89,7 +89,7 @@ const notices: Record<Language, Notice> = {
       {
         title: "Dans votre navigateur",
         body: [
-          "Votre panier et votre langue restent sur votre appareil. Les restaurateurs reçoivent un seul cookie de connexion. Aucun cookie publicitaire ni de suivi.",
+          "Votre panier, votre langue et votre nom (pour ne pas le ressaisir) restent sur votre appareil. Les restaurateurs reçoivent un seul cookie de connexion. Aucun cookie publicitaire ni de suivi.",
         ],
       },
       {
@@ -131,7 +131,7 @@ const notices: Record<Language, Notice> = {
       {
         title: "في متصفحك",
         body: [
-          "تبقى سلتك ولغتك على جهازك فقط. يحصل أصحاب المطاعم على ملف تعريف ارتباط واحد لتسجيل الدخول. لا توجد ملفات تعريف ارتباط إعلانية أو للتتبع.",
+          "تبقى سلتك ولغتك واسمك (حتى لا تعيد كتابته) على جهازك فقط. يحصل أصحاب المطاعم على ملف تعريف ارتباط واحد لتسجيل الدخول. لا توجد ملفات تعريف ارتباط إعلانية أو للتتبع.",
         ],
       },
       {

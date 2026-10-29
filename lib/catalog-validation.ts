@@ -65,17 +65,28 @@ function integer(value: unknown, field: string, maximum = 1_000_000): number {
   return value;
 }
 
+/**
+ * Translations are optional: "one" needs text in at least one language
+ * (names), "optional" may be empty everywhere (descriptions). Missing
+ * languages fall back on the customer menu (see lib/text.ts).
+ */
 function localized(
   value: unknown,
   field: string,
   maximum: number,
+  required: "one" | "optional" = "one",
 ): LocalizedText {
   const row = object(value, field);
-  return {
-    en: string(row.en, `${field} (English)`, maximum),
-    fr: string(row.fr, `${field} (French)`, maximum),
-    ar: string(row.ar, `${field} (Arabic)`, maximum),
+  const text = {
+    en: string(row.en ?? "", `${field} (English)`, maximum, true),
+    fr: string(row.fr ?? "", `${field} (French)`, maximum, true),
+    ar: string(row.ar ?? "", `${field} (Arabic)`, maximum, true),
   };
+  if (required === "one" && !text.en && !text.fr && !text.ar)
+    throw new CatalogValidationError(
+      `${field} needs text in at least one language.`,
+    );
+  return text;
 }
 
 function id(value: unknown, field: string): string {
@@ -190,7 +201,7 @@ function item(value: unknown, categoryIds: Set<string>): MenuItem {
     id: id(row.id, "Item ID"),
     category: row.category,
     name: localized(row.name, "Item name", 100),
-    description: localized(row.description, "Item description", 500),
+    description: localized(row.description, "Item description", 500, "optional"),
     price: integer(row.price, "Item price"),
     image: imageUrl(row.image),
     tags: row.tags.map((tag) => string(tag, "Tag", 30)),
