@@ -59,6 +59,21 @@ const languages: { id: Language; label: string }[] = [
 const label = (text: Catalog["items"][number]["name"], language: Language) =>
   pickText(text, language);
 const newId = () => crypto.randomUUID().replaceAll("-", "");
+/** "Olive & Ember" → "OE", "Café Hafa" → "CH", "مقهى الربيع" → "مر"; never more than two. */
+function initials(name: string): string {
+  const letters = name
+    .split(/\s+/)
+    .map((word) =>
+      word
+        .replace(/[^\p{L}\p{N}]/gu, "")
+        // Skip the Arabic article: "الربيع" abbreviates as "ر".
+        .replace(/^ال(?=\p{L}{2})/u, "")
+        .charAt(0),
+    )
+    .filter(Boolean);
+  return (letters.length > 1 ? letters[0] + letters.at(-1) : letters[0] || "T")
+    .toLocaleUpperCase();
+}
 
 export default function AdminPage() {
   const [user, setUser] = useState<AppUser | null>(null);
@@ -284,7 +299,9 @@ export default function AdminPage() {
             TableTap<span className="admin-logo-dot">.</span>
           </a>
           <div className="admin-workspace">
-            <span className="admin-workspace-symbol">O&E</span>
+            <span className="admin-workspace-symbol" aria-hidden="true">
+              {initials(catalog.settings.name)}
+            </span>
             <div>
               <strong>{catalog.settings.name}</strong>
               <span>{user ? t.yourRestaurant : t.demoRestaurant}</span>

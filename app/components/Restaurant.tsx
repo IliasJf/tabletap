@@ -170,6 +170,28 @@ export default function Restaurant({
     [copied, setCopied] = useState(false),
     [orderId, setOrderId] = useState("");
   const DishHeading = menuOnly ? "h2" : "h3";
+  // Section tabs scroll sideways on phones; fade the edge that hides more tabs.
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const [tabsMore, setTabsMore] = useState({ start: false, end: false });
+  function measureTabs() {
+    const el = tabsRef.current;
+    if (!el) return;
+    const hidden = el.scrollWidth - el.clientWidth;
+    // scrollLeft is negative when scrolling right to left (Arabic).
+    const scrolled = Math.abs(el.scrollLeft);
+    setTabsMore((current) => {
+      // Ignore the last few pixels: that is the row's end padding, not a tab.
+      const next = { start: scrolled > 24, end: scrolled < hidden - 24 };
+      return current.start === next.start && current.end === next.end
+        ? current
+        : next;
+    });
+  }
+  useEffect(() => {
+    measureTabs();
+    window.addEventListener("resize", measureTabs);
+    return () => window.removeEventListener("resize", measureTabs);
+  });
   const t = copy[language],
     restaurantName = catalog.settings.name || "TableTap",
     totals = calculateCart(
@@ -486,7 +508,14 @@ export default function Restaurant({
             </p>
           )}
           <div className="menu-toolbar">
-            <div className="category-tabs" aria-label={t.menu}>
+            <div
+              className="category-tabs"
+              aria-label={t.menu}
+              ref={tabsRef}
+              data-more-start={tabsMore.start || undefined}
+              data-more-end={tabsMore.end || undefined}
+              onScroll={measureTabs}
+            >
               {[
                 { id: "all", label: t.all },
                 ...menuCategories.map((entry) => ({
@@ -497,7 +526,15 @@ export default function Restaurant({
                 <button
                   key={id}
                   aria-pressed={category === id}
-                  onClick={() => setCategory(id)}
+                  onClick={(e) => {
+                    setCategory(id);
+                    // Bring a half-hidden tab fully into view.
+                    e.currentTarget.scrollIntoView({
+                      behavior: "smooth",
+                      block: "nearest",
+                      inline: "nearest",
+                    });
+                  }}
                   className={category === id ? "active" : ""}
                 >
                   {label}

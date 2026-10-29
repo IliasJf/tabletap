@@ -80,13 +80,17 @@
   margin-top: 13px;
 }
 .admin-workspace-symbol {
-  background: #e6e8dd;
+  background: var(--admin-accent);
+  color: #f8f7f2;
   width: 36px;
   height: 36px;
+  border-radius: 8px;
   display: grid;
   place-items: center;
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   flex-shrink: 0;
 }
 .admin-workspace strong,
