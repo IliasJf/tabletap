@@ -107,9 +107,10 @@ export default function CategoriesPanel({
                   aria-label={t.deleteSection(nameOf(entry))}
                   title={count ? t.sectionInUse : undefined}
                   disabled={count > 0 || categories.length < 2}
-                  onClick={() =>
-                    onChange(categories.filter((_, i) => i !== index))
-                  }
+                  onClick={() => {
+                    if (window.confirm(t.confirmDeleteSection(nameOf(entry))))
+                      onChange(categories.filter((_, i) => i !== index));
+                  }}
                 >
                   <Trash2 size={16} />
                 </button>

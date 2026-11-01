@@ -44,6 +44,7 @@ import SignInPanel from "./SignInPanel";
 import {
   ADMIN_LANGUAGE_KEY,
   AdminCopyContext,
+  localizeError,
   adminCopy,
   initialAdminLanguage,
 } from "./admin-copy";
@@ -241,7 +242,9 @@ export default function AdminPage() {
       setSaved(validateCatalog(data));
       setNotice(t.savedNotice);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t.errorSave);
+      setError(
+        cause instanceof Error ? localizeError(cause.message, t) : t.errorSave,
+      );
     } finally {
       setSaving(false);
     }

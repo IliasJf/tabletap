@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { ImageUp, Link2 } from "lucide-react";
 import { MAX_IMAGE_BYTES } from "../../lib/images";
-import { useAdminCopy } from "./admin-copy";
+import { localizeError, useAdminCopy } from "./admin-copy";
 
 /** Thrown when even the smallest JPEG is over the server's limit. */
 class PhotoTooDetailed extends Error {}
@@ -62,7 +62,7 @@ export default function PhotoField({
         cause instanceof PhotoTooDetailed
           ? t.photoTooDetailed
           : cause instanceof Error && cause.message
-            ? cause.message
+            ? localizeError(cause.message, t)
             : t.photoFailed,
       );
     } finally {

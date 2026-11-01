@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Mail } from "lucide-react";
-import { useAdminCopy } from "./admin-copy";
+import { localizeError, useAdminCopy } from "./admin-copy";
 
 const RESEND_AFTER_S = 60;
 
@@ -41,6 +41,7 @@ export default function SignInPanel({
 
   async function sendCode(event?: React.FormEvent) {
     event?.preventDefault();
+    if (busy) return;
     setBusy(true);
     setError("");
     try {
@@ -54,7 +55,9 @@ export default function SignInPanel({
       setTimeout(() => codeInput.current?.focus(), 0);
     } catch (cause) {
       setError(
-        cause instanceof Error && cause.message ? cause.message : t.tryAgain,
+        cause instanceof Error && cause.message
+          ? localizeError(cause.message, t)
+          : t.tryAgain,
       );
     } finally {
       setBusy(false);
@@ -63,6 +66,12 @@ export default function SignInPanel({
 
   async function verify(event: React.FormEvent) {
     event.preventDefault();
+    if (busy) return;
+    // The button stays usable; tapping it early explains what is missing.
+    if (code.length !== 6) {
+      setError(t.codeIncomplete);
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -70,7 +79,9 @@ export default function SignInPanel({
       onSignedIn();
     } catch (cause) {
       setError(
-        cause instanceof Error && cause.message ? cause.message : t.tryAgain,
+        cause instanceof Error && cause.message
+          ? localizeError(cause.message, t)
+          : t.tryAgain,
       );
       setBusy(false);
     }
@@ -97,13 +108,13 @@ export default function SignInPanel({
               onChange={(e) => setEmail(e.target.value)}
             />
           </label>
-          <button type="submit" className="admin-primary" disabled={busy}>
+          <button type="submit" className="admin-primary" aria-busy={busy}>
             <Mail size={16} />
             {busy ? t.sending : t.emailMeCode}
           </button>
         </form>
       ) : (
-        <form className="admin-signin-form" onSubmit={verify}>
+        <form className="admin-signin-form" onSubmit={verify} noValidate>
           <label className="admin-field">
             {t.codeLabel}
             <input
@@ -124,11 +135,7 @@ export default function SignInPanel({
               {t.codeShown} <strong>{devCode}</strong>
             </p>
           )}
-          <button
-            type="submit"
-            className="admin-primary"
-            disabled={busy || code.length !== 6}
-          >
+          <button type="submit" className="admin-primary" aria-busy={busy}>
             {busy ? t.checking : t.signIn}
             <ArrowRight size={16} />
           </button>

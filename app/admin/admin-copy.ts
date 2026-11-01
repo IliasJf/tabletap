@@ -248,6 +248,21 @@ const en = {
     Language,
     string
   >,
+  confirmDeleteSection: (name: string) =>
+    `Delete the “${name}” section? Save your menu to publish this change.`,
+  codeIncomplete: "Enter all 6 digits of the code from your email.",
+  serverErrors: {
+    codeWrong: "That code doesn’t match. Check your email and try again.",
+    codeExpired: "This code has expired. Ask for a new one.",
+    codeLocked: "Too many tries with this code. Ask for a new one.",
+    codeCooldown: "A code is on its way. You can ask for another in a minute.",
+    emailInvalid: "Enter an email address like name@cafe.com.",
+    slugTaken:
+      "Another restaurant uses that link name. Choose a different one.",
+    menuConflict:
+      "This menu changed in another tab. Reload it, then make your edits again.",
+    tooMany: "Too many attempts. Wait a few minutes, then try again.",
+  },
   orderType: {
     "dine-in": "Dine-in",
     takeaway: "Takeaway",
@@ -500,6 +515,22 @@ const fr: AdminCopy = {
   qrMenuBy: "Carte par",
   qrCaption: "Votre carte de table à imprimer",
   translationLanguages: { en: "Anglais", fr: "Français", ar: "Arabe" },
+  confirmDeleteSection: (name) =>
+    `Supprimer la rubrique « ${name} » ? Enregistrez la carte pour publier ce changement.`,
+  codeIncomplete: "Saisissez les 6 chiffres du code reçu par e-mail.",
+  serverErrors: {
+    codeWrong: "Ce code ne correspond pas. Vérifiez votre e-mail et réessayez.",
+    codeExpired: "Ce code a expiré. Demandez-en un nouveau.",
+    codeLocked: "Trop d’essais avec ce code. Demandez-en un nouveau.",
+    codeCooldown:
+      "Un code est en route. Vous pourrez en demander un autre dans une minute.",
+    emailInvalid: "Saisissez une adresse e-mail comme nom@cafe.com.",
+    slugTaken:
+      "Un autre restaurant utilise ce nom de lien. Choisissez-en un autre.",
+    menuConflict:
+      "Cette carte a changé dans un autre onglet. Rechargez-la, puis refaites vos modifications.",
+    tooMany: "Trop de tentatives. Attendez quelques minutes, puis réessayez.",
+  },
   orderType: {
     "dine-in": "Sur place",
     takeaway: "À emporter",
@@ -732,6 +763,20 @@ const ar: AdminCopy = {
   qrMenuBy: "قائمة من",
   qrCaption: "بطاقة طاولتك للطباعة",
   translationLanguages: { en: "الإنجليزية", fr: "الفرنسية", ar: "العربية" },
+  confirmDeleteSection: (name) =>
+    `حذف قسم «${name}»؟ احفظ قائمتك لنشر هذا التغيير.`,
+  codeIncomplete: "أدخل الأرقام الستة للرمز الذي وصلك بالبريد.",
+  serverErrors: {
+    codeWrong: "هذا الرمز غير مطابق. تحقق من بريدك وحاول مرة أخرى.",
+    codeExpired: "انتهت صلاحية هذا الرمز. اطلب رمزًا جديدًا.",
+    codeLocked: "محاولات كثيرة بهذا الرمز. اطلب رمزًا جديدًا.",
+    codeCooldown: "الرمز في الطريق. يمكنك طلب رمز آخر بعد دقيقة.",
+    emailInvalid: "أدخل بريدًا إلكترونيًا مثل name@cafe.com.",
+    slugTaken: "مطعم آخر يستخدم اسم الرابط هذا. اختر اسمًا آخر.",
+    menuConflict:
+      "تغيّرت هذه القائمة في علامة تبويب أخرى. أعد تحميلها ثم أعد تعديلاتك.",
+    tooMany: "محاولات كثيرة. انتظر بضع دقائق ثم حاول مرة أخرى.",
+  },
   orderType: {
     "dine-in": "داخل المقهى",
     takeaway: "للاستلام",
@@ -773,4 +818,25 @@ export const AdminCopyContext = createContext<{
 
 export function useAdminCopy() {
   return useContext(AdminCopyContext);
+}
+
+/**
+ * The server answers in English. Known messages are shown in the
+ * dashboard's language; anything unrecognised is shown as it came.
+ */
+const SERVER_MESSAGES: [RegExp, keyof AdminCopy["serverErrors"]][] = [
+  [/^That code isn.t right/, "codeWrong"],
+  [/^This code has expired/, "codeExpired"],
+  [/^Too many wrong codes/, "codeLocked"],
+  [/^We just sent you a code/, "codeCooldown"],
+  [/^Enter a valid email address/, "emailInvalid"],
+  [/^Enter the 6-digit code/, "codeWrong"],
+  [/^That menu link name is already used/, "slugTaken"],
+  [/^This menu was changed in another tab/, "menuConflict"],
+  [/^Too many /, "tooMany"],
+];
+
+export function localizeError(message: string, t: AdminCopy): string {
+  const match = SERVER_MESSAGES.find(([pattern]) => pattern.test(message));
+  return match ? t.serverErrors[match[1]] : message;
 }

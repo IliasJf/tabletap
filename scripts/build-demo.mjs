@@ -53,9 +53,23 @@ await cp(path.join(root, "public"), out, { recursive: true });
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${base}"><title>TableTap — café QR menu demo</title><meta name="description" content="Live demo of TableTap: a café QR menu with WhatsApp ordering, an owner dashboard, and English, French and Arabic support."><meta property="og:type" content="website"><meta property="og:title" content="TableTap — café QR menu demo"><meta property="og:description" content="Scan, choose and order on WhatsApp. Owners edit the menu in English, French and Arabic and track orders."><meta property="og:image" content="${site}og.jpg"><meta property="og:url" content="${site}"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#f8f7f2"><link rel="icon" href="favicon.svg"><link rel="preload" href="fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="app.css"></head><body><div id="root"></div><script type="module" src="app.js"></script></body></html>`;
 await writeFile(path.join(out, "index.html"), html);
 await writeFile(path.join(out, "404.html"), html);
+// Each page gets its own tab title, so tabs and bookmarks can be told apart.
+const titles = {
+  menu: "Menu · Olive & Ember",
+  admin: "Owner dashboard · TableTap",
+  qr: "QR table cards · TableTap",
+  credits: "Photo credits · TableTap",
+  privacy: "Privacy · TableTap",
+};
 for (const route of routes) {
   await mkdir(path.join(out, route), { recursive: true });
-  await writeFile(path.join(out, route, "index.html"), html);
+  await writeFile(
+    path.join(out, route, "index.html"),
+    html.replace(
+      "<title>TableTap — café QR menu demo</title>",
+      `<title>${titles[route]}</title>`,
+    ),
+  );
 }
 // Serve files as-is (no Jekyll processing).
 await writeFile(path.join(out, ".nojekyll"), "");

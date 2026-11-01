@@ -6,7 +6,6 @@ import {
   ArrowUpRight,
   Check,
   Clock3,
-  Coffee,
   Copy,
   Leaf,
   MapPin,
@@ -41,6 +40,7 @@ import { pickText } from "../../lib/text";
 import { copy } from "./copy";
 
 const NAME_KEY = "tabletap:customer-name";
+type CheckoutField = "name" | "table" | "address";
 
 function Mark() {
   return (
@@ -111,7 +111,21 @@ function Modal({
       // Start on the dialog, not its close button: no focus ring on phones,
       // and keyboard users reach every control with Tab.
       el.querySelector<HTMLElement>(".modal-inside")?.focus();
-    } else if (!open && el.open) el.close();
+    } else if (!open && el.open) {
+      // Leave the way it came in, quicker than it entered (apple-design,
+      // emil-design-eng). With reduced motion the CSS fades instead.
+      el.classList.add("closing");
+      const finish = () => {
+        el.classList.remove("closing");
+        if (el.open) el.close();
+      };
+      const timer = setTimeout(finish, 220);
+      el.addEventListener("animationend", finish, { once: true });
+      return () => {
+        clearTimeout(timer);
+        el.classList.remove("closing");
+      };
+    }
     if (open) {
       const old = document.body.style.overflow;
       document.body.style.overflow = "hidden";
@@ -125,7 +139,11 @@ function Modal({
       ref={ref}
       aria-label={label}
       className={drawer ? "modal cart-modal" : "modal item-modal"}
-      onCancel={onClose}
+      onCancel={(e) => {
+        // Let the exit animation run instead of the browser closing at once.
+        e.preventDefault();
+        onClose();
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -168,6 +186,14 @@ export default function Restaurant({
     [formError, setFormError] = useState(""),
     [notice, setNotice] = useState(""),
     [copied, setCopied] = useState(false),
+    // Fields shown as invalid: set when a field is left empty or wrong,
+    // cleared on the first corrective keystroke (not on focus, so that
+    // jumping to the first problem field keeps its message visible).
+    [invalid, setInvalid] = useState<Partial<Record<CheckoutField, boolean>>>(
+      {},
+    ),
+    // After "Continue to WhatsApp": the order-sent ending instead of the preview.
+    [sent, setSent] = useState(false),
     [orderId, setOrderId] = useState("");
   const DishHeading = menuOnly ? "h2" : "h3";
   const bagRef = useRef<HTMLButtonElement>(null);
@@ -193,7 +219,7 @@ export default function Restaurant({
     measureTabs();
     window.addEventListener("resize", measureTabs);
     return () => window.removeEventListener("resize", measureTabs);
-  });
+  }, [catalog.categories, language, loading]);
   const t = copy[language],
     restaurantName = catalog.settings.name || "TableTap",
     totals = calculateCart(
@@ -350,16 +376,61 @@ export default function Restaurant({
     setSelected(null);
     setNotice(t.saved);
     setMessage("");
+    setSent(false);
+  }
+  /** Dishes without extras go straight into the order: one tap, not two. */
+  function quickAdd(item: MenuItem) {
+    if (item.options.length) return pick(item);
+    setCart((c) => addToCart(c, item, [], 1));
+    setNotice(t.saved);
+    setMessage("");
+    setSent(false);
+  }
+  function fieldInvalid(field: CheckoutField, next = details) {
+    if (field === "name") return !next.name.trim();
+    if (field === "table")
+      return (
+        next.type === "dine-in" &&
+        !/^[A-Za-z0-9 -]{1,20}$/.test(next.table.trim())
+      );
+    return next.type === "delivery" && next.address.trim().length < 5;
+  }
+  function checkField(field: CheckoutField) {
+    setInvalid((current) => ({ ...current, [field]: fieldInvalid(field) }));
+  }
+  function clearField(field: CheckoutField) {
+    setInvalid((current) =>
+      current[field] ? { ...current, [field]: false } : current,
+    );
+  }
+  function startNewOrder() {
+    setCart([]);
+    setMessage("");
+    setSent(false);
+    setOrderId("");
+    setDetails((d) => ({ ...d, notes: "", address: "" }));
+    setCartOpen(false);
   }
   function changeQuantity(key: string, q: number) {
     setCart((c) => updateCartQuantity(c, key, q));
     setMessage("");
+    setSent(false);
   }
-  function preview(e: React.FormEvent) {
+  function preview(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    // Show every problem next to its field and move to the first one.
+    const fields: CheckoutField[] = ["name", "table", "address"];
+    const wrong = fields.filter((field) => fieldInvalid(field));
+    if (wrong.length) {
+      setInvalid(Object.fromEntries(wrong.map((field) => [field, true])));
+      e.currentTarget
+        .querySelector<HTMLElement>(`[name="${wrong[0]}"]`)
+        ?.focus();
+      return;
+    }
     const issue = validateOrder(details);
     if (issue) {
-      setFormError(issue);
+      setFormError(t.error);
       return;
     }
     try {
@@ -371,9 +442,8 @@ export default function Restaurant({
       setFormError("");
       setCopied(false);
     } catch (err) {
-      setFormError(
-        err instanceof Error ? err.message : "Unable to prepare order.",
-      );
+      console.error("Could not build the order message:", err);
+      setFormError(t.error);
     }
   }
   function changeLanguage(next: Language) {
@@ -389,6 +459,7 @@ export default function Restaurant({
   }
   /** Records the order for the owner's dashboard. WhatsApp opens either way. */
   function recordOrder() {
+    setSent(true);
     if (!shop || !orderId) return;
     fetch("/api/orders", {
       method: "POST",
@@ -402,7 +473,7 @@ export default function Restaurant({
       await navigator.clipboard.writeText(message);
       setCopied(true);
     } catch {
-      setFormError("Please select and copy the message below.");
+      setFormError(t.copyFallback);
     }
   }
   let whatsappUrl = "";
@@ -615,13 +686,28 @@ export default function Restaurant({
             </div>
           </div>
           {loading ? (
-            <div className="menu-state" role="status">
-              <Coffee size={30} />
-              <p>{t.menuLoading}</p>
+            // Placeholders shaped like the dishes, so nothing jumps when they arrive.
+            <div
+              className="menu-grid menu-skeleton"
+              role="status"
+              aria-busy="true"
+            >
+              <span className="sr-only">{t.menuLoading}</span>
+              {[0, 1, 2, 3].map((n) => (
+                <div className="menu-item" key={n} aria-hidden="true">
+                  <span className="skeleton-photo" />
+                  <span className="skeleton-lines">
+                    <span />
+                    <span />
+                    <span />
+                  </span>
+                </div>
+              ))}
             </div>
           ) : error ? (
             <div className="menu-state" role="alert">
               <h3>{t.error}</h3>
+              <p>{t.errorHelp}</p>
               <button
                 className="button primary"
                 onClick={() => setReload((v) => v + 1)}
@@ -629,7 +715,7 @@ export default function Restaurant({
                 {t.retry}
               </button>
               <a className="text-link" href="/menu">
-                Open demo menu
+                {t.openDemo}
               </a>
             </div>
           ) : filtered.length === 0 ? (
@@ -688,7 +774,7 @@ export default function Restaurant({
                       <button
                         className="add-button"
                         disabled={!item.available}
-                        onClick={() => pick(item)}
+                        onClick={() => quickAdd(item)}
                         aria-label={`${t.add} ${pickText(item.name, language)}`}
                       >
                         {item.available ? (
@@ -935,6 +1021,32 @@ export default function Restaurant({
               <ArrowRight size={17} />
             </button>
           </div>
+        ) : sent ? (
+          // The ending: what happened, what to do in WhatsApp, and a clean restart.
+          <div className="order-sent" role="status">
+            <span className="order-sent-mark" aria-hidden="true">
+              <Check size={26} />
+            </span>
+            <h3>{t.sentTitle}</h3>
+            <p>{t.sentText.replace("{restaurant}", restaurantName)}</p>
+            <button
+              className="button primary full-width"
+              onClick={startNewOrder}
+            >
+              {t.newOrder}
+            </button>
+            {whatsappUrl && (
+              <a
+                className="text-link"
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t.openAgain}
+                <ArrowUpRight size={16} />
+              </a>
+            )}
+          </div>
         ) : message ? (
           <div className="order-preview">
             <button className="text-link" onClick={() => setMessage("")}>
@@ -974,7 +1086,7 @@ export default function Restaurant({
             )}
           </div>
         ) : (
-          <form className="cart-form" onSubmit={preview}>
+          <form className="cart-form" onSubmit={preview} noValidate>
             <div className="cart-lines">
               {totals.lines.map((line) => (
                 <div className="cart-line" key={line.key}>
@@ -1059,42 +1171,72 @@ export default function Restaurant({
             <label className="form-field">
               {t.name}
               <input
+                name="name"
                 required
                 maxLength={100}
-                autoComplete="given-name"
+                autoComplete="name"
                 value={details.name}
-                onChange={(e) =>
-                  setDetails((d) => ({ ...d, name: e.target.value }))
-                }
+                aria-invalid={invalid.name || undefined}
+                aria-describedby={invalid.name ? "err-name" : undefined}
+                onBlur={() => checkField("name")}
+                onChange={(e) => {
+                  clearField("name");
+                  setDetails((d) => ({ ...d, name: e.target.value }));
+                }}
               />
+              {invalid.name && (
+                <span className="field-error" id="err-name">
+                  {t.errName}
+                </span>
+              )}
             </label>
             {details.type === "dine-in" && (
               <label className="form-field">
                 {t.table}
                 <input
+                  name="table"
                   required
                   maxLength={20}
                   placeholder="5"
                   value={details.table}
-                  onChange={(e) =>
-                    setDetails((d) => ({ ...d, table: e.target.value }))
-                  }
+                  aria-invalid={invalid.table || undefined}
+                  aria-describedby={invalid.table ? "err-table" : undefined}
+                  onBlur={() => checkField("table")}
+                  onChange={(e) => {
+                    clearField("table");
+                    setDetails((d) => ({ ...d, table: e.target.value }));
+                  }}
                 />
+                {invalid.table && (
+                  <span className="field-error" id="err-table">
+                    {t.errTable}
+                  </span>
+                )}
               </label>
             )}
             {details.type === "delivery" && (
               <label className="form-field">
                 {t.address}
                 <textarea
+                  name="address"
                   required
                   minLength={5}
                   maxLength={300}
                   autoComplete="street-address"
                   value={details.address}
-                  onChange={(e) =>
-                    setDetails((d) => ({ ...d, address: e.target.value }))
-                  }
+                  aria-invalid={invalid.address || undefined}
+                  aria-describedby={invalid.address ? "err-address" : undefined}
+                  onBlur={() => checkField("address")}
+                  onChange={(e) => {
+                    clearField("address");
+                    setDetails((d) => ({ ...d, address: e.target.value }));
+                  }}
                 />
+                {invalid.address && (
+                  <span className="field-error" id="err-address">
+                    {t.errAddress}
+                  </span>
+                )}
               </label>
             )}
             <label className="form-field">
