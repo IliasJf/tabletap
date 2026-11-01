@@ -1757,23 +1757,36 @@ html[lang="ar"] :is(h1, h2, .brand, .hero-small-photo span) {
 }
 
 /* ------------------------------------------------------------------
-   Motion. Content is only hidden once the script has confirmed motion
-   is wanted (html.motion-ok), so nothing stays invisible without it.
-   Transform and opacity only.
+   Motion. One signature curve and three durations ("Premium": calm, no
+   bounce). Content is only hidden once the script has confirmed motion
+   is wanted (html.motion-ok). Transform and opacity only.
    ------------------------------------------------------------------ */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --dur-quick: 140ms;
+  --dur-standard: 280ms;
+  --dur-slow: 560ms;
+}
 html.motion-ok [data-reveal] {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(20px);
   transition:
-    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
   transition-delay: calc(var(--reveal-i, 0) * 70ms);
+}
+/* Dishes appear often (every filter change): shorter and closer. */
+html.motion-ok .menu-item[data-reveal] {
+  transform: translateY(12px);
+  transition-duration: 400ms;
 }
 html.motion-ok [data-reveal].is-in {
   opacity: 1;
   transform: none;
 }
-/* Press feedback on every control people tap. */
+/* Press feedback on every control people tap, on touch-down. */
 .button,
 .add-button,
 .bag-button,
@@ -1782,9 +1795,9 @@ html.motion-ok [data-reveal].is-in {
 .close-button,
 .quantity-control button {
   transition:
-    transform 0.12s ease,
-    background-color 0.15s ease,
-    color 0.15s ease;
+    transform var(--dur-quick) var(--ease-out),
+    background-color 150ms ease,
+    color 150ms ease;
 }
 .button:active,
 .add-button:active:not(:disabled),
@@ -1793,19 +1806,30 @@ html.motion-ok [data-reveal].is-in {
 .veg-filter:active,
 .close-button:active,
 .quantity-control button:active {
-  transform: scale(0.96);
+  transform: scale(0.97);
 }
-/* The cart count pops when something is added. */
+/* Photo zoom only with a real pointer; on phones a tap would leave it stuck. */
+.menu-image-button:hover img {
+  transform: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .menu-image-button:hover img {
+    transform: scale(1.04);
+  }
+}
+/* The cart count lifts when something is added: no overshoot. */
 .bag-button.bump {
-  animation: cart-bump 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+  animation: cart-bump 260ms var(--ease-out);
 }
 @keyframes cart-bump {
   40% {
-    transform: scale(1.14);
+    transform: scale(1.08);
   }
-  100% {
-    transform: none;
-  }
+}
+.toast {
+  transition:
+    opacity var(--dur-standard) var(--ease-out),
+    transform var(--dur-standard) var(--ease-out);
 }
 /* The hero photograph drifts very slowly, like a held breath. */
 .hero-main-photo {
@@ -1820,17 +1844,30 @@ html.motion-ok [data-reveal].is-in {
     transform: scale(1.06);
   }
 }
-/* Dialogs rise in; the cart slides from the side it lives on. */
+/* Dialogs rise in and leave the way they came, quicker than they arrived.
+   The cart slides from the side it lives on. */
 dialog[open] .modal-inside {
-  animation: dialog-rise 0.32s cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: dialog-rise var(--dur-standard) var(--ease-out);
 }
 dialog.cart-modal[open] .modal-inside {
-  animation: drawer-in 0.34s cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: drawer-in 300ms var(--ease-drawer);
+}
+dialog.closing .modal-inside {
+  animation: dialog-out 180ms var(--ease-in) forwards;
+}
+dialog.cart-modal.closing .modal-inside {
+  animation: drawer-out 200ms var(--ease-in) forwards;
 }
 @keyframes dialog-rise {
   from {
     opacity: 0;
     transform: translateY(24px) scale(0.98);
+  }
+}
+@keyframes dialog-out {
+  to {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
   }
 }
 @keyframes drawer-in {
@@ -1839,12 +1876,38 @@ dialog.cart-modal[open] .modal-inside {
     opacity: 0;
   }
 }
+@keyframes drawer-out {
+  to {
+    transform: translateX(32px);
+    opacity: 0;
+  }
+}
 [dir="rtl"] dialog.cart-modal[open] .modal-inside {
   animation-name: drawer-in-rtl;
+}
+[dir="rtl"] dialog.cart-modal.closing .modal-inside {
+  animation-name: drawer-out-rtl;
 }
 @keyframes drawer-in-rtl {
   from {
     transform: translateX(-32px);
+    opacity: 0;
+  }
+}
+@keyframes drawer-out-rtl {
+  to {
+    transform: translateX(-32px);
+    opacity: 0;
+  }
+}
+/* Reduced motion keeps feedback, as gentle fades instead of movement. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fade-out {
+  to {
     opacity: 0;
   }
 }
@@ -1855,9 +1918,119 @@ dialog.cart-modal[open] .modal-inside {
     transition: none;
   }
   .hero-main-photo,
-  .bag-button.bump,
-  dialog[open] .modal-inside {
+  .bag-button.bump {
     animation: none;
+  }
+  dialog[open] .modal-inside,
+  dialog.cart-modal[open] .modal-inside {
+    animation: fade-in 150ms ease-out;
+  }
+  dialog.closing .modal-inside,
+  dialog.cart-modal.closing .modal-inside {
+    animation: fade-out 120ms ease-out forwards;
+  }
+  .button:active,
+  .add-button:active:not(:disabled),
+  .bag-button:active,
+  .category-tabs button:active,
+  .veg-filter:active,
+  .close-button:active,
+  .quantity-control button:active {
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Checkout field errors: shown next to the field after it is left
+   empty or wrong, and gone as soon as the customer starts correcting.
+   ------------------------------------------------------------------ */
+.field-error {
+  display: block;
+  margin-top: 6px;
+  color: #9a302d;
+  font-size: 14px;
+  font-weight: 500;
+}
+.form-field [aria-invalid="true"] {
+  border-color: #9a302d;
+  box-shadow: inset 0 0 0 1px #9a302d;
+}
+
+/* The ending after "Continue to WhatsApp". */
+.order-sent {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  /* Same side margins as the order preview it replaces. */
+  padding: 28px 28px 30px;
+}
+.order-sent-mark {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+}
+.order-sent h3 {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+.order-sent p {
+  font-size: 16px;
+  line-height: 1.55;
+}
+.order-sent .text-link {
+  justify-self: center;
+}
+
+/* Loading: placeholders shaped like dish cards. */
+.menu-skeleton .skeleton-photo {
+  flex: 0 0 auto;
+  width: var(--skeleton-photo, 180px);
+  height: var(--skeleton-photo, 180px);
+  background: var(--surface);
+}
+.menu-skeleton .skeleton-lines {
+  display: grid;
+  gap: 10px;
+  flex: 1;
+  align-content: start;
+  padding-top: 6px;
+}
+.menu-skeleton .skeleton-lines span {
+  display: block;
+  height: 14px;
+  background: var(--surface);
+}
+.menu-skeleton .skeleton-lines span:first-child {
+  height: 18px;
+  width: 60%;
+}
+.menu-skeleton .skeleton-lines span:last-child {
+  width: 40%;
+}
+@media (max-width: 1100px) {
+  .menu-skeleton {
+    --skeleton-photo: 140px;
+  }
+}
+@media (max-width: 760px) {
+  .menu-skeleton {
+    --skeleton-photo: 112px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .menu-skeleton .menu-item {
+    animation: skeleton-pulse 1.4s ease-in-out infinite alternate;
+  }
+}
+@keyframes skeleton-pulse {
+  to {
+    opacity: 0.55;
   }
 }
 
@@ -3509,6 +3682,15 @@ button.admin-signout {
 [dir="rtl"] .admin-edit-button > svg.lucide-chevron-right,
 [dir="rtl"] .admin-sidebar nav svg.lucide-chevron-right {
   transform: scaleX(-1);
+}
+/* The search box shows focus on the whole field (its input has no outline). */
+.admin-search:focus-within {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+}
+.admin-signin-form [aria-busy="true"] {
+  opacity: 0.7;
+  cursor: progress;
 }
 
 /* A slim bar at the top of every page, shown only on the GitHub Pages demo. */
