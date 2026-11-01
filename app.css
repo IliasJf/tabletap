@@ -26,6 +26,27 @@
   --surface: #eeeee5;
   --muted: #666b5f;
   --line: #dedfd5;
+  /* Every colour on the page comes from these; dark mode swaps the values. */
+  --ink-soft: #444a3e;
+  --surface-strong: #e4e6db;
+  --surface-warm: #ece9d7;
+  --control-line: #cdd0c3;
+  --accent-strong: #29351e;
+  --accent-text: #5a6c42;
+  --accent-tint: #e6ebdf;
+  --accent-edge: #6a775a;
+  --link-hover: #78815e;
+  --on-accent: #ffffff;
+  --on-accent-veil: #ffffff1f;
+  --inverse: #252b20;
+  --on-inverse: #ffffff;
+  --footer-bg: #3f4c2f;
+  --footer-ink: #f4f4ea;
+  --focus: #a77c35;
+  --error: #9a302d;
+  --scrim: #18211280;
+  --shadow-color: #20261525;
+  color-scheme: light;
   --serif: "Cormorant Garamond", "Amiri", Georgia, serif;
   --sans: "DM Sans", Arial, sans-serif;
   --background: var(--paper);
@@ -98,7 +119,7 @@ button:active,
   transform: translateY(1px);
 }
 :focus-visible {
-  outline: 3px solid #a77c35;
+  outline: 3px solid var(--focus);
   outline-offset: 4px;
 }
 .sr-only {
@@ -122,7 +143,7 @@ button:active,
   left: 16px;
   z-index: 100;
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   padding: 12px;
 }
 .skip-link:focus {
@@ -157,7 +178,7 @@ button:active,
 }
 .main-nav a:hover,
 .footer-links a:hover {
-  color: #78815e;
+  color: var(--link-hover);
 }
 .header-actions {
   display: flex;
@@ -176,7 +197,7 @@ button:active,
 .bag-button {
   border: 0;
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   border-radius: 50px;
   display: flex;
   gap: 10px;
@@ -227,10 +248,10 @@ button:active,
 }
 .primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 .primary:hover:not(:disabled) {
-  background: #29351e;
+  background: var(--accent-strong);
 }
 .secondary {
   border-color: var(--line);
@@ -371,7 +392,7 @@ button:active,
 }
 .category-tabs button.active {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
 }
 .menu-filter-row {
   display: flex;
@@ -472,7 +493,7 @@ button:active,
   line-height: 1.3;
 }
 .diet-icon {
-  color: #5a6c42;
+  color: var(--accent-text);
   flex-shrink: 0;
 }
 .menu-item-content > p {
@@ -501,7 +522,7 @@ button:active,
   align-items: center;
   gap: 10px;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   border: 1px solid var(--accent);
   border-radius: 30px;
   font-size: 13px;
@@ -513,8 +534,8 @@ button:active,
     transform 0.1s ease;
 }
 .add-button:hover:not(:disabled) {
-  background: #2f3a22;
-  border-color: #2f3a22;
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
 }
 .unavailable .menu-image-button {
   filter: grayscale(0.7);
@@ -550,7 +571,7 @@ button:active,
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #e6ebdf;
+  background: var(--accent-tint);
   padding: 12px 16px;
   font-size: 14px;
   margin: 0 0 20px;
@@ -601,7 +622,7 @@ button:active,
   text-underline-offset: 5px;
 }
 .text-link:hover {
-  color: #78815e;
+  color: var(--link-hover);
 }
 .visit-section {
   display: grid;
@@ -633,8 +654,8 @@ button:active,
   margin-top: 2px;
 }
 .site-footer {
-  background: var(--accent);
-  color: #f4f4ea;
+  background: var(--footer-bg);
+  color: var(--footer-ink);
   padding: 40px 0 26px;
 }
 .footer-top {
@@ -672,13 +693,13 @@ button:active,
   gap: 17px;
   align-items: center;
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   padding: 12px 20px 12px 12px;
-  border: 1px solid #6a775a;
+  border: 1px solid var(--accent-edge);
   border-radius: 50px;
   min-width: 360px;
   font-size: 14px;
-  box-shadow: 0 5px 25px #20261525;
+  box-shadow: 0 5px 25px var(--shadow-color);
 }
 .floating-cart:active {
   transform: translateX(-50%) translateY(1px);
@@ -694,7 +715,7 @@ button:active,
   width: 31px;
   height: 31px;
   border-radius: 50%;
-  background: #ffffff1f;
+  background: var(--on-accent-veil);
 }
 .toast {
   position: fixed;
@@ -702,8 +723,8 @@ button:active,
   left: 50%;
   transform: translate(-50%, 10px);
   z-index: 15;
-  background: var(--ink);
-  color: white;
+  background: var(--inverse);
+  color: var(--on-inverse);
   border-radius: 30px;
   padding: 12px 20px;
   display: flex;
@@ -730,7 +751,7 @@ button:active,
   overscroll-behavior: contain;
 }
 .modal::backdrop {
-  background: #18211280;
+  background: var(--scrim);
 }
 .item-modal {
   width: min(520px, calc(100% - 28px));
@@ -756,7 +777,7 @@ button:active,
   flex-shrink: 0;
 }
 .close-button:hover {
-  background: #e4e6db;
+  background: var(--surface-strong);
 }
 .item-modal-photo > .close-button {
   position: absolute;
@@ -991,7 +1012,7 @@ fieldset {
 }
 .order-types label.selected {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   border-color: var(--accent);
 }
 .order-types input {
@@ -1003,7 +1024,7 @@ fieldset {
   cursor: pointer;
 }
 .order-types label:focus-within {
-  outline: 3px solid #a77c35;
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 .form-field {
@@ -1015,7 +1036,7 @@ fieldset {
 .form-field textarea {
   display: block;
   width: 100%;
-  border: 1px solid #cdd0c3;
+  border: 1px solid var(--control-line);
   border-radius: 3px;
   background: transparent;
   padding: 12px;
@@ -1059,7 +1080,7 @@ fieldset {
 }
 .form-error {
   font-size: 13px;
-  color: #9a2b21;
+  color: var(--error);
   margin: 15px 0;
 }
 .order-preview > .text-link {
@@ -1082,7 +1103,7 @@ fieldset {
   overflow: auto;
 }
 .demo-warning {
-  background: #ece9d7;
+  background: var(--surface-warm);
   padding: 15px;
   font-size: 12px;
   line-height: 1.7;
@@ -1737,7 +1758,7 @@ html[lang="ar"] :is(h1, h2, .brand, .hero-small-photo span) {
   line-height: 1.55;
   max-width: 34ch;
   /* Near-ink, not soft grey: descriptions are what people read to choose. */
-  color: #444a3e;
+  color: var(--ink-soft);
 }
 .menu-item .menu-item-name {
   font-size: 18px;
@@ -1947,13 +1968,13 @@ dialog.cart-modal.closing .modal-inside {
 .field-error {
   display: block;
   margin-top: 6px;
-  color: #9a302d;
+  color: var(--error);
   font-size: 14px;
   font-weight: 500;
 }
 .form-field [aria-invalid="true"] {
-  border-color: #9a302d;
-  box-shadow: inset 0 0 0 1px #9a302d;
+  border-color: var(--error);
+  box-shadow: inset 0 0 0 1px var(--error);
 }
 
 /* The ending after "Continue to WhatsApp". */
@@ -1971,7 +1992,7 @@ dialog.cart-modal.closing .modal-inside {
   height: 52px;
   border-radius: 50%;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 .order-sent h3 {
   font-family: var(--serif);
@@ -2047,6 +2068,46 @@ dialog.cart-modal.closing .modal-inside {
   font-size: 13px;
 }
 
+/* ------------------------------------------------------------------
+   Dark mode follows the phone's setting. Warm olive-charcoal, not black;
+   the accent turns light so buttons keep their contrast, and text on it
+   turns dark. Photos are left as they are.
+   ------------------------------------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #161a13;
+    --surface: #20251c;
+    --surface-strong: #2b3125;
+    --surface-warm: #29291f;
+    --ink: #ecebe2;
+    --ink-soft: #d2d4c7;
+    --muted: #a7ac9c;
+    --line: #333a2d;
+    --control-line: #4d5543;
+    --accent: #a3b77f;
+    --accent-strong: #b8ca97;
+    --accent-text: #b0c38d;
+    --accent-tint: #252e1d;
+    --accent-edge: #b8ca97;
+    --link-hover: #c3d1a6;
+    --on-accent: #161a13;
+    --on-accent-veil: #161a131f;
+    --inverse: #ecebe2;
+    --on-inverse: #161a13;
+    --footer-bg: #1d2318;
+    --footer-ink: #e4e5da;
+    --focus: #d9b06a;
+    --error: #f0968a;
+    --scrim: #000000a6;
+    --shadow-color: #00000066;
+    color-scheme: dark;
+  }
+  /* Dishes and photos sit on a slightly lighter card so they don't float. */
+  .modal {
+    box-shadow: inset 0 1px 0 #ffffff0f;
+  }
+}
+
 .admin-app,
 .admin-qr-layout {
   --admin-paper: #f8f7f2;
@@ -2057,6 +2118,29 @@ dialog.cart-modal.closing .modal-inside {
   --admin-accent: #3f4c2f;
   --admin-active: #edeee8;
   --admin-error: #9a302d;
+  /* Every dashboard colour comes from these; dark mode swaps the values. */
+  --admin-surface: #ffffff;
+  --admin-on-accent: #f8f7f2;
+  --admin-on-ink: #ffffff;
+  --admin-ink-hover: #41483a;
+  --admin-disabled-bg: #e8e9e2;
+  --admin-disabled-ink: #62685b;
+  --admin-quiet-bg: #f4f4ef;
+  --admin-quiet-ink: #666b61;
+  --admin-chip: #e6e8dd;
+  --admin-row-line: #f0f1ec;
+  --admin-on: #4f6942;
+  --admin-off: #a7aba1;
+  --admin-success-bg: #f1f4ed;
+  --admin-error-bg: #faf0ed;
+  --admin-notice-bg: #f2f1e9;
+  --admin-skeleton: #eff0eb;
+  --admin-panel: #f7f8f4;
+  --admin-readonly-bg: #fafbf7;
+  --admin-readonly-ink: #5c6256;
+  --admin-attention-bg: #fdf3df;
+  --admin-attention-ink: #7a4b00;
+  --admin-preparing-bg: #e6efe0;
   color: var(--admin-ink);
   font-family: var(--sans);
   font-size: 14px;
@@ -2130,7 +2214,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-workspace-symbol {
   background: var(--admin-accent);
-  color: #f8f7f2;
+  color: var(--admin-on-accent);
   width: 36px;
   height: 36px;
   border-radius: 8px;
@@ -2202,7 +2286,7 @@ dialog.cart-modal.closing .modal-inside {
   gap: 10px;
 }
 .admin-account > span {
-  background: #e6e8dd;
+  background: var(--admin-chip);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -2245,7 +2329,7 @@ dialog.cart-modal.closing .modal-inside {
   border: 0;
 }
 .admin-sheet {
-  background: white;
+  background: var(--admin-surface);
   border: 1px solid var(--admin-line);
   border-radius: 16px;
   margin: 0 8px 8px 0;
@@ -2293,26 +2377,26 @@ dialog.cart-modal.closing .modal-inside {
 .admin-qr-layout .admin-primary,
 .admin-app .admin-primary {
   background: var(--admin-ink);
-  color: #fff;
+  color: var(--admin-on-ink);
 }
 .admin-primary:hover {
-  background: #41483a;
+  background: var(--admin-ink-hover);
 }
 .admin-primary:disabled {
-  background: #e8e9e2 !important;
-  color: #62685b !important;
+  background: var(--admin-disabled-bg) !important;
+  color: var(--admin-disabled-ink) !important;
 }
 .admin-secondary {
   color: var(--admin-ink);
-  background: white;
+  background: var(--admin-surface);
   border-color: var(--admin-control);
 }
 .admin-secondary:hover {
   background: var(--admin-paper);
 }
 .admin-secondary:disabled {
-  background: #f4f4ef;
-  color: #666b61;
+  background: var(--admin-quiet-bg);
+  color: var(--admin-quiet-ink);
 }
 .admin-signin {
   background: var(--admin-paper);
@@ -2413,7 +2497,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-dish-row {
   padding: 16px 0;
-  border-bottom: 1px solid #f0f1ec;
+  border-bottom: 1px solid var(--admin-row-line);
 }
 .admin-dish-identity {
   display: flex;
@@ -2464,14 +2548,14 @@ dialog.cart-modal.closing .modal-inside {
 .admin-availability span {
   width: 6px;
   height: 6px;
-  background: #4f6942;
+  background: var(--admin-on);
   border-radius: 50%;
 }
 .admin-availability.unavailable {
   color: var(--admin-muted);
 }
 .admin-availability.unavailable span {
-  background: #a7aba1;
+  background: var(--admin-off);
 }
 .admin-edit-button {
   display: flex;
@@ -2504,7 +2588,7 @@ dialog.cart-modal.closing .modal-inside {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #f1f4ed;
+  background: var(--admin-success-bg);
   padding: 12px 16px;
   border-radius: 6px;
   margin-bottom: 18px;
@@ -2514,7 +2598,7 @@ dialog.cart-modal.closing .modal-inside {
   margin: 0;
 }
 .admin-message-error {
-  background: #faf0ed;
+  background: var(--admin-error-bg);
   align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -2538,7 +2622,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-notice {
   font-size: 13px;
-  background: #f2f1e9;
+  background: var(--admin-notice-bg);
   border-radius: 6px;
   padding: 14px 16px;
   line-height: 1.6;
@@ -2558,18 +2642,18 @@ dialog.cart-modal.closing .modal-inside {
 .admin-skeleton-row > span:first-child {
   width: 60px;
   height: 60px;
-  background: #eff0eb;
+  background: var(--admin-skeleton);
   border-radius: 6px;
 }
 .admin-skeleton-row > div {
   width: 180px;
   height: 14px;
-  background: #eff0eb;
+  background: var(--admin-skeleton);
 }
 .admin-skeleton-row > span:last-child {
   width: 60px;
   height: 14px;
-  background: #eff0eb;
+  background: var(--admin-skeleton);
   margin-inline-start: auto;
 }
 .admin-text-button,
@@ -2610,7 +2694,7 @@ dialog.cart-modal.closing .modal-inside {
   border-radius: 6px;
   padding: 10px 12px;
   min-height: 40px;
-  background: white;
+  background: var(--admin-surface);
   color: var(--admin-ink);
   font-size: 14px;
   margin-top: 8px;
@@ -2790,7 +2874,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-setting-fields {
   padding: 20px;
-  background: #f7f8f4;
+  background: var(--admin-panel);
   border-radius: 8px;
 }
 .admin-setting-fields .admin-field:last-child {
@@ -2801,10 +2885,10 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-settings:disabled input,
 .admin-settings:disabled textarea {
-  color: #5c6256;
-  background: #fafbf7;
+  color: var(--admin-readonly-ink);
+  background: var(--admin-readonly-bg);
   opacity: 1;
-  -webkit-text-fill-color: #5c6256;
+  -webkit-text-fill-color: var(--admin-readonly-ink);
 }
 .admin-qr-layout {
   display: grid;
@@ -2976,7 +3060,7 @@ dialog.cart-modal.closing .modal-inside {
   margin-top: 8px;
   border: 1px solid var(--admin-control);
   border-radius: 6px;
-  background: white;
+  background: var(--admin-surface);
   overflow: hidden;
 }
 .admin-slug-input span {
@@ -3053,7 +3137,7 @@ dialog.cart-modal.closing .modal-inside {
 .admin-order-summary > div {
   padding: 12px 16px;
   min-width: 130px;
-  background: #f7f8f4;
+  background: var(--admin-panel);
   border-radius: 8px;
 }
 .admin-order-summary dt {
@@ -3115,7 +3199,7 @@ dialog.cart-modal.closing .modal-inside {
   padding: 12px 16px;
   border-radius: 8px;
   background: var(--admin-ink);
-  color: white;
+  color: var(--admin-on-ink);
   font-size: 14px;
   font-weight: 500;
 }
@@ -3125,7 +3209,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 @keyframes admin-order-arrive {
   0% {
-    background-color: #fdf3df;
+    background-color: var(--admin-attention-bg);
   }
   100% {
     background-color: transparent;
@@ -3134,7 +3218,7 @@ dialog.cart-modal.closing .modal-inside {
 @media (prefers-reduced-motion: reduce) {
   .admin-order-fresh {
     animation: none;
-    background-color: #fdf3df;
+    background-color: var(--admin-attention-bg);
   }
 }
 .admin-order-help {
@@ -3574,7 +3658,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 /* Order statuses */
 .admin-order-summary > .admin-order-attention {
-  background: #fdf3df;
+  background: var(--admin-attention-bg);
 }
 
 .admin-order-status {
@@ -3593,11 +3677,11 @@ dialog.cart-modal.closing .modal-inside {
   margin-top: 0;
 }
 .admin-order-status.new {
-  background: #fdf3df;
-  color: #7a4b00;
+  background: var(--admin-attention-bg);
+  color: var(--admin-attention-ink);
 }
 .admin-order-status.preparing {
-  background: #e6efe0;
+  background: var(--admin-preparing-bg);
   color: var(--admin-accent);
 }
 .admin-order-status.cancelled {
@@ -3693,6 +3777,53 @@ button.admin-signout {
   cursor: progress;
 }
 
+/* Dark mode follows the device setting, like the customer menu. */
+@media (prefers-color-scheme: dark) {
+  .admin-app,
+  .admin-qr-layout {
+    --admin-paper: #161a13;
+    --admin-ink: #ecebe2;
+    --admin-muted: #a7ac9c;
+    --admin-line: #30362a;
+    --admin-control: #4d5543;
+    --admin-accent: #a3b77f;
+    --admin-active: #262c20;
+    --admin-error: #f0968a;
+    --admin-surface: #1d2219;
+    --admin-on-accent: #161a13;
+    --admin-on-ink: #161a13;
+    --admin-ink-hover: #d4d6c8;
+    --admin-disabled-bg: #2b3125;
+    --admin-disabled-ink: #8c9182;
+    --admin-quiet-bg: #22271d;
+    --admin-quiet-ink: #8c9182;
+    --admin-chip: #2b3125;
+    --admin-row-line: #262c20;
+    --admin-on: #a3b77f;
+    --admin-off: #5d6354;
+    --admin-success-bg: #222b1b;
+    --admin-error-bg: #33201c;
+    --admin-notice-bg: #26261d;
+    --admin-skeleton: #252a20;
+    --admin-panel: #1b2017;
+    --admin-readonly-bg: #1b2017;
+    --admin-readonly-ink: #a7ac9c;
+    --admin-attention-bg: #3a2e14;
+    --admin-attention-ink: #f1c879;
+    --admin-preparing-bg: #243020;
+  }
+  /* The printable QR card stays white so phones can scan it. */
+  .admin-qr-card {
+    --admin-ink: #252b20;
+    --admin-muted: #656b5f;
+    --admin-line: #e8e9e2;
+    --admin-accent: #3f4c2f;
+    --ink: #252b20;
+    --muted: #666b5f;
+    color: #252b20;
+  }
+}
+
 /* A slim bar at the top of every page, shown only on the GitHub Pages demo. */
 .demo-badge {
   display: flex;
@@ -3701,8 +3832,8 @@ button.admin-signout {
   flex-wrap: wrap;
   gap: 0 12px;
   padding: 0 16px;
-  background: #252b20;
-  color: #f8f7f2;
+  background: var(--inverse);
+  color: var(--on-inverse);
   font:
     13px/1.4 "DM Sans",
     system-ui,
