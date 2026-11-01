@@ -6,8 +6,8 @@
   flex-wrap: wrap;
   gap: 0 12px;
   padding: 0 16px;
-  background: #252b20;
-  color: #f8f7f2;
+  background: var(--inverse);
+  color: var(--on-inverse);
   font:
     13px/1.4 "DM Sans",
     system-ui,

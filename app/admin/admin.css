@@ -8,6 +8,29 @@
   --admin-accent: #3f4c2f;
   --admin-active: #edeee8;
   --admin-error: #9a302d;
+  /* Every dashboard colour comes from these; dark mode swaps the values. */
+  --admin-surface: #ffffff;
+  --admin-on-accent: #f8f7f2;
+  --admin-on-ink: #ffffff;
+  --admin-ink-hover: #41483a;
+  --admin-disabled-bg: #e8e9e2;
+  --admin-disabled-ink: #62685b;
+  --admin-quiet-bg: #f4f4ef;
+  --admin-quiet-ink: #666b61;
+  --admin-chip: #e6e8dd;
+  --admin-row-line: #f0f1ec;
+  --admin-on: #4f6942;
+  --admin-off: #a7aba1;
+  --admin-success-bg: #f1f4ed;
+  --admin-error-bg: #faf0ed;
+  --admin-notice-bg: #f2f1e9;
+  --admin-skeleton: #eff0eb;
+  --admin-panel: #f7f8f4;
+  --admin-readonly-bg: #fafbf7;
+  --admin-readonly-ink: #5c6256;
+  --admin-attention-bg: #fdf3df;
+  --admin-attention-ink: #7a4b00;
+  --admin-preparing-bg: #e6efe0;
   color: var(--admin-ink);
   font-family: var(--sans);
   font-size: 14px;
@@ -81,7 +104,7 @@
 }
 .admin-workspace-symbol {
   background: var(--admin-accent);
-  color: #f8f7f2;
+  color: var(--admin-on-accent);
   width: 36px;
   height: 36px;
   border-radius: 8px;
@@ -153,7 +176,7 @@
   gap: 10px;
 }
 .admin-account > span {
-  background: #e6e8dd;
+  background: var(--admin-chip);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -196,7 +219,7 @@
   border: 0;
 }
 .admin-sheet {
-  background: white;
+  background: var(--admin-surface);
   border: 1px solid var(--admin-line);
   border-radius: 16px;
   margin: 0 8px 8px 0;
@@ -244,26 +267,26 @@
 .admin-qr-layout .admin-primary,
 .admin-app .admin-primary {
   background: var(--admin-ink);
-  color: #fff;
+  color: var(--admin-on-ink);
 }
 .admin-primary:hover {
-  background: #41483a;
+  background: var(--admin-ink-hover);
 }
 .admin-primary:disabled {
-  background: #e8e9e2 !important;
-  color: #62685b !important;
+  background: var(--admin-disabled-bg) !important;
+  color: var(--admin-disabled-ink) !important;
 }
 .admin-secondary {
   color: var(--admin-ink);
-  background: white;
+  background: var(--admin-surface);
   border-color: var(--admin-control);
 }
 .admin-secondary:hover {
   background: var(--admin-paper);
 }
 .admin-secondary:disabled {
-  background: #f4f4ef;
-  color: #666b61;
+  background: var(--admin-quiet-bg);
+  color: var(--admin-quiet-ink);
 }
 .admin-signin {
   background: var(--admin-paper);
@@ -364,7 +387,7 @@
 }
 .admin-dish-row {
   padding: 16px 0;
-  border-bottom: 1px solid #f0f1ec;
+  border-bottom: 1px solid var(--admin-row-line);
 }
 .admin-dish-identity {
   display: flex;
@@ -415,14 +438,14 @@
 .admin-availability span {
   width: 6px;
   height: 6px;
-  background: #4f6942;
+  background: var(--admin-on);
   border-radius: 50%;
 }
 .admin-availability.unavailable {
   color: var(--admin-muted);
 }
 .admin-availability.unavailable span {
-  background: #a7aba1;
+  background: var(--admin-off);
 }
 .admin-edit-button {
   display: flex;
@@ -455,7 +478,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #f1f4ed;
+  background: var(--admin-success-bg);
   padding: 12px 16px;
   border-radius: 6px;
   margin-bottom: 18px;
@@ -465,7 +488,7 @@
   margin: 0;
 }
 .admin-message-error {
-  background: #faf0ed;
+  background: var(--admin-error-bg);
   align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -489,7 +512,7 @@
 }
 .admin-notice {
   font-size: 13px;
-  background: #f2f1e9;
+  background: var(--admin-notice-bg);
   border-radius: 6px;
   padding: 14px 16px;
   line-height: 1.6;
@@ -509,18 +532,18 @@
 .admin-skeleton-row > span:first-child {
   width: 60px;
   height: 60px;
-  background: #eff0eb;
+  background: var(--admin-skeleton);
   border-radius: 6px;
 }
 .admin-skeleton-row > div {
   width: 180px;
   height: 14px;
-  background: #eff0eb;
+  background: var(--admin-skeleton);
 }
 .admin-skeleton-row > span:last-child {
   width: 60px;
   height: 14px;
-  background: #eff0eb;
+  background: var(--admin-skeleton);
   margin-inline-start: auto;
 }
 .admin-text-button,
@@ -561,7 +584,7 @@
   border-radius: 6px;
   padding: 10px 12px;
   min-height: 40px;
-  background: white;
+  background: var(--admin-surface);
   color: var(--admin-ink);
   font-size: 14px;
   margin-top: 8px;
@@ -741,7 +764,7 @@
 }
 .admin-setting-fields {
   padding: 20px;
-  background: #f7f8f4;
+  background: var(--admin-panel);
   border-radius: 8px;
 }
 .admin-setting-fields .admin-field:last-child {
@@ -752,10 +775,10 @@
 }
 .admin-settings:disabled input,
 .admin-settings:disabled textarea {
-  color: #5c6256;
-  background: #fafbf7;
+  color: var(--admin-readonly-ink);
+  background: var(--admin-readonly-bg);
   opacity: 1;
-  -webkit-text-fill-color: #5c6256;
+  -webkit-text-fill-color: var(--admin-readonly-ink);
 }
 .admin-qr-layout {
   display: grid;
@@ -927,7 +950,7 @@
   margin-top: 8px;
   border: 1px solid var(--admin-control);
   border-radius: 6px;
-  background: white;
+  background: var(--admin-surface);
   overflow: hidden;
 }
 .admin-slug-input span {
@@ -1004,7 +1027,7 @@
 .admin-order-summary > div {
   padding: 12px 16px;
   min-width: 130px;
-  background: #f7f8f4;
+  background: var(--admin-panel);
   border-radius: 8px;
 }
 .admin-order-summary dt {
@@ -1066,7 +1089,7 @@
   padding: 12px 16px;
   border-radius: 8px;
   background: var(--admin-ink);
-  color: white;
+  color: var(--admin-on-ink);
   font-size: 14px;
   font-weight: 500;
 }
@@ -1076,7 +1099,7 @@
 }
 @keyframes admin-order-arrive {
   0% {
-    background-color: #fdf3df;
+    background-color: var(--admin-attention-bg);
   }
   100% {
     background-color: transparent;
@@ -1085,7 +1108,7 @@
 @media (prefers-reduced-motion: reduce) {
   .admin-order-fresh {
     animation: none;
-    background-color: #fdf3df;
+    background-color: var(--admin-attention-bg);
   }
 }
 .admin-order-help {
@@ -1525,7 +1548,7 @@
 }
 /* Order statuses */
 .admin-order-summary > .admin-order-attention {
-  background: #fdf3df;
+  background: var(--admin-attention-bg);
 }
 
 .admin-order-status {
@@ -1544,11 +1567,11 @@
   margin-top: 0;
 }
 .admin-order-status.new {
-  background: #fdf3df;
-  color: #7a4b00;
+  background: var(--admin-attention-bg);
+  color: var(--admin-attention-ink);
 }
 .admin-order-status.preparing {
-  background: #e6efe0;
+  background: var(--admin-preparing-bg);
   color: var(--admin-accent);
 }
 .admin-order-status.cancelled {
@@ -1642,4 +1665,51 @@ button.admin-signout {
 .admin-signin-form [aria-busy="true"] {
   opacity: 0.7;
   cursor: progress;
+}
+
+/* Dark mode follows the device setting, like the customer menu. */
+@media (prefers-color-scheme: dark) {
+  .admin-app,
+  .admin-qr-layout {
+    --admin-paper: #161a13;
+    --admin-ink: #ecebe2;
+    --admin-muted: #a7ac9c;
+    --admin-line: #30362a;
+    --admin-control: #4d5543;
+    --admin-accent: #a3b77f;
+    --admin-active: #262c20;
+    --admin-error: #f0968a;
+    --admin-surface: #1d2219;
+    --admin-on-accent: #161a13;
+    --admin-on-ink: #161a13;
+    --admin-ink-hover: #d4d6c8;
+    --admin-disabled-bg: #2b3125;
+    --admin-disabled-ink: #8c9182;
+    --admin-quiet-bg: #22271d;
+    --admin-quiet-ink: #8c9182;
+    --admin-chip: #2b3125;
+    --admin-row-line: #262c20;
+    --admin-on: #a3b77f;
+    --admin-off: #5d6354;
+    --admin-success-bg: #222b1b;
+    --admin-error-bg: #33201c;
+    --admin-notice-bg: #26261d;
+    --admin-skeleton: #252a20;
+    --admin-panel: #1b2017;
+    --admin-readonly-bg: #1b2017;
+    --admin-readonly-ink: #a7ac9c;
+    --admin-attention-bg: #3a2e14;
+    --admin-attention-ink: #f1c879;
+    --admin-preparing-bg: #243020;
+  }
+  /* The printable QR card stays white so phones can scan it. */
+  .admin-qr-card {
+    --admin-ink: #252b20;
+    --admin-muted: #656b5f;
+    --admin-line: #e8e9e2;
+    --admin-accent: #3f4c2f;
+    --ink: #252b20;
+    --muted: #666b5f;
+    color: #252b20;
+  }
 }
