@@ -64,7 +64,7 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.5;
 }
 button,
@@ -161,7 +161,7 @@ button:active,
   min-height: 44px;
   gap: 9px;
   font-family: var(--serif);
-  font-size: 30px;
+  font-size: 1.875rem;
   white-space: nowrap;
   font-weight: 600;
   letter-spacing: -0.04em;
@@ -174,7 +174,7 @@ button:active,
   align-items: center;
   gap: 36px;
   margin-inline: auto;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .main-nav a:hover,
 .footer-links a:hover {
@@ -188,7 +188,7 @@ button:active,
 .language-select select {
   border: 0;
   background: none;
-  font-size: 13px;
+  font-size: 0.8125rem;
   min-height: 44px;
   padding: 0 4px;
   color: var(--ink);
@@ -204,7 +204,7 @@ button:active,
   align-items: center;
   justify-content: center;
   padding: 13px 20px;
-  font-size: 14px;
+  font-size: 0.875rem;
   min-height: 46px;
 }
 .hero {
@@ -219,7 +219,7 @@ button:active,
   z-index: 1;
 }
 .hero h1 {
-  font-size: clamp(62px, 6.7vw, 102px);
+  font-size: clamp(3.875rem, 6.7vw, 6.375rem);
 }
 .hero h1 span,
 .story-copy h2 span {
@@ -228,7 +228,7 @@ button:active,
 .hero-copy > p {
   max-width: 310px;
   margin-top: 30px;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.75;
 }
 .button {
@@ -238,7 +238,7 @@ button:active,
   gap: 24px;
   min-height: 50px;
   padding: 13px 24px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   border-radius: 30px;
   border: 1px solid transparent;
@@ -267,7 +267,7 @@ button:active,
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: 0.75rem;
   margin-top: 44px;
 }
 .hero-photos {
@@ -300,14 +300,14 @@ button:active,
 .hero-small-photo span {
   display: block;
   font-family: var(--serif);
-  font-size: 23px;
+  font-size: 1.4375rem;
   padding: 10px 5px;
   line-height: 1;
 }
 .hero-photo-caption {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 0.6875rem;
   padding-top: 12px;
   padding-inline-start: 110px;
 }
@@ -328,15 +328,15 @@ button:active,
 }
 .section-heading h1,
 .section-heading h2 {
-  font-size: clamp(40px, 4.1vw, 60px);
+  font-size: clamp(2.5rem, 4.1vw, 3.75rem);
   line-height: 1;
 }
 .section-heading p {
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-top: 16px;
 }
 .menu-note {
-  font-size: 12px;
+  font-size: 0.75rem;
   display: flex;
   gap: 7px;
   align-items: center;
@@ -383,7 +383,7 @@ button:active,
   border: 0;
   border-radius: 30px;
   background: transparent;
-  font-size: 14px;
+  font-size: 0.875rem;
   padding: 11px 21px;
   min-height: 44px;
 }
@@ -419,7 +419,7 @@ button:active,
   min-width: 0;
   width: 100%;
   color: var(--ink);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .search-box:focus-within {
   outline: 2px solid var(--accent);
@@ -431,7 +431,7 @@ button:active,
   align-items: center;
   border: 1px solid var(--line);
   background: transparent;
-  font-size: 12px;
+  font-size: 0.75rem;
   border-radius: 30px;
   min-height: 44px;
   padding: 9px 16px;
@@ -489,7 +489,7 @@ button:active,
   font-family: var(--sans);
   font-weight: 500;
   letter-spacing: normal;
-  font-size: 17px;
+  font-size: 1.0625rem;
   line-height: 1.3;
 }
 .diet-icon {
@@ -497,7 +497,7 @@ button:active,
   flex-shrink: 0;
 }
 .menu-item-content > p {
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1.65;
   color: var(--muted);
   margin-top: 9px;
@@ -512,7 +512,7 @@ button:active,
   padding-top: 13px;
 }
 .menu-item-bottom > strong {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -525,7 +525,7 @@ button:active,
   color: var(--on-accent);
   border: 1px solid var(--accent);
   border-radius: 30px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   padding: 7px 16px;
   min-height: 44px;
@@ -541,7 +541,7 @@ button:active,
   filter: grayscale(0.7);
 }
 .unavailable .add-button {
-  font-size: 11px;
+  font-size: 0.6875rem;
   border: 0;
   padding: 8px 0;
   white-space: nowrap;
@@ -550,7 +550,7 @@ button:active,
   font-weight: 400;
 }
 .allergy-note {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--muted);
   margin-top: 42px;
 }
@@ -565,7 +565,7 @@ button:active,
 }
 .menu-state h3 {
   font-family: var(--serif);
-  font-size: 28px;
+  font-size: 1.75rem;
 }
 .table-notice {
   display: flex;
@@ -573,7 +573,7 @@ button:active,
   gap: 8px;
   background: var(--accent-tint);
   padding: 12px 16px;
-  font-size: 14px;
+  font-size: 0.875rem;
   margin: 0 0 20px;
 }
 .story-section {
@@ -597,11 +597,11 @@ button:active,
   margin-inline-start: -5px;
 }
 .story-copy h2 {
-  font-size: clamp(36px, 4vw, 58px);
+  font-size: clamp(2.25rem, 4vw, 3.625rem);
   margin-top: 24px;
 }
 .story-copy p {
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.8;
   margin-top: 24px;
   max-width: 340px;
@@ -617,7 +617,7 @@ button:active,
   background: none;
   border: 0;
   padding: 7px 0;
-  font-size: 14px;
+  font-size: 0.875rem;
   text-decoration: underline;
   text-underline-offset: 5px;
 }
@@ -632,7 +632,7 @@ button:active,
   align-items: center;
 }
 .visit-section h2 {
-  font-size: 48px;
+  font-size: 3rem;
   max-width: 250px;
 }
 .visit-detail {
@@ -641,11 +641,11 @@ button:active,
   align-items: flex-start;
 }
 .visit-detail h3 {
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-bottom: 9px;
 }
 .visit-detail p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--muted);
   max-width: 230px;
 }
@@ -667,7 +667,7 @@ button:active,
 .footer-links {
   display: flex;
   gap: 25px;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .footer-links a {
   display: flex;
@@ -679,7 +679,7 @@ button:active,
   display: flex;
   justify-content: space-between;
   gap: 15px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   margin-top: 38px;
   opacity: 0.75;
 }
@@ -698,7 +698,7 @@ button:active,
   border: 1px solid var(--accent-edge);
   border-radius: 50px;
   min-width: 360px;
-  font-size: 14px;
+  font-size: 0.875rem;
   box-shadow: 0 5px 25px var(--shadow-color);
 }
 .floating-cart:active {
@@ -730,7 +730,7 @@ button:active,
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   opacity: 0;
   pointer-events: none;
   transition:
@@ -794,16 +794,16 @@ button:active,
   align-items: center;
 }
 .modal-title-row h2 {
-  font-size: 34px;
+  font-size: 2.125rem;
   line-height: 1;
 }
 .modal-title-row > strong {
-  font-size: 15px;
+  font-size: 0.9375rem;
   white-space: nowrap;
   font-weight: 500;
 }
 .item-modal-body > p {
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.7;
   margin-top: 15px;
   color: var(--muted);
@@ -819,7 +819,7 @@ fieldset {
 }
 .extras legend,
 .order-types legend {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 12px;
 }
@@ -827,7 +827,7 @@ fieldset {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   padding: 12px 0;
 }
 .extras input {
@@ -848,7 +848,7 @@ fieldset {
 }
 .item-add-row .button {
   flex: 1;
-  font-size: 13px;
+  font-size: 0.8125rem;
   gap: 15px;
   padding: 13px 15px;
 }
@@ -872,7 +872,7 @@ fieldset {
 .quantity-control output {
   min-width: 23px;
   text-align: center;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .cart-modal {
   position: fixed;
@@ -895,14 +895,14 @@ fieldset {
   border-bottom: 1px solid var(--line);
 }
 .cart-heading h2 {
-  font-size: 35px;
+  font-size: 2.1875rem;
   display: flex;
   align-items: center;
   gap: 14px;
 }
 .cart-heading h2 span {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   background: var(--surface);
   border-radius: 50%;
   width: 27px;
@@ -921,11 +921,11 @@ fieldset {
 }
 .empty-cart h3 {
   font-family: var(--serif);
-  font-size: 35px;
+  font-size: 2.1875rem;
 }
 .empty-cart p {
   max-width: 280px;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 .empty-cart .button {
@@ -959,15 +959,15 @@ fieldset {
   gap: 15px;
 }
 .cart-line-title h3 {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .cart-line-title > strong {
-  font-size: 12px;
+  font-size: 0.75rem;
   white-space: nowrap;
   font-weight: 500;
 }
 .cart-line-body > p {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--muted);
   margin-top: 5px;
 }
@@ -1007,7 +1007,7 @@ fieldset {
   border-radius: 30px;
   padding: 10px 6px;
   text-align: center;
-  font-size: 12px;
+  font-size: 0.75rem;
   cursor: pointer;
 }
 .order-types label.selected {
@@ -1030,7 +1030,7 @@ fieldset {
 .form-field {
   display: block;
   margin-top: 22px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .form-field input,
 .form-field textarea {
@@ -1041,7 +1041,7 @@ fieldset {
   background: transparent;
   padding: 12px;
   margin-top: 8px;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--ink);
 }
 .form-field textarea {
@@ -1049,7 +1049,7 @@ fieldset {
   min-height: 85px;
 }
 .optional {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--muted);
   margin-inline-start: 8px;
 }
@@ -1059,11 +1059,11 @@ fieldset {
 .order-totals p {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 0.8125rem;
   padding: 4px 0;
 }
 .order-totals .grand-total {
-  font-size: 19px;
+  font-size: 1.1875rem;
   font-weight: 500;
   padding-top: 15px;
 }
@@ -1073,13 +1073,13 @@ fieldset {
 }
 .cart-fine-print,
 .confirmation-note {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--muted);
   line-height: 1.7;
   margin-top: 15px;
 }
 .form-error {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--error);
   margin: 15px 0;
 }
@@ -1088,14 +1088,14 @@ fieldset {
 }
 .order-preview h3 {
   font-family: var(--serif);
-  font-size: 29px;
+  font-size: 1.8125rem;
   margin-top: 20px;
 }
 .order-preview pre {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.8;
   background: var(--surface);
   padding: 20px;
@@ -1105,7 +1105,7 @@ fieldset {
 .demo-warning {
   background: var(--surface-warm);
   padding: 15px;
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1.7;
   margin-top: 15px;
 }
@@ -1118,7 +1118,7 @@ fieldset {
   gap: 12px;
   text-align: center;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .qr-page,
 .credits-page {
@@ -1127,12 +1127,12 @@ fieldset {
 }
 .back-link {
   display: inline-block;
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-bottom: 40px;
 }
 .qr-page > h1,
 .credits-page > h1 {
-  font-size: 60px;
+  font-size: 3.75rem;
 }
 .qr-intro {
   max-width: 570px;
@@ -1157,7 +1157,7 @@ fieldset {
     height: 90px;
   }
   .brand {
-    font-size: 26px;
+    font-size: 1.625rem;
   }
   .main-nav {
     gap: 22px;
@@ -1169,7 +1169,7 @@ fieldset {
   }
   .hero h1 {
     /* Two lines at every width: 72px at 1100px, about 51px at 768px. */
-    font-size: min(72px, 6.6vw);
+    font-size: min(4.5rem, 6.6vw);
   }
   .hero-main-photo {
     height: 430px;
@@ -1199,13 +1199,13 @@ fieldset {
     height: 150px;
   }
   .menu-item .menu-item-name {
-    font-size: 15px;
+    font-size: 0.9375rem;
   }
   .menu-item-content > p {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   .menu-item-bottom > strong {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   .story-copy {
     padding: 34px;
@@ -1217,7 +1217,7 @@ fieldset {
     gap: 25px;
   }
   .visit-section h2 {
-    font-size: 40px;
+    font-size: 2.5rem;
   }
 }
 @media (max-width: 760px) {
@@ -1229,7 +1229,7 @@ fieldset {
     gap: 10px;
   }
   .brand {
-    font-size: 24px;
+    font-size: 1.5rem;
     gap: 2px;
   }
   .brand svg {
@@ -1259,18 +1259,18 @@ fieldset {
     padding-top: 0;
   }
   .hero h1 {
-    font-size: clamp(58px, 14vw, 84px);
+    font-size: clamp(3.625rem, 14vw, 5.25rem);
     letter-spacing: -0.04em;
   }
   .hero-copy > p {
     max-width: 330px;
     margin-top: 20px;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 1.7;
   }
   .hero-copy > .button {
     margin-top: 20px;
-    font-size: 13px;
+    font-size: 0.8125rem;
     min-height: 46px;
     padding: 11px 20px;
   }
@@ -1295,13 +1295,13 @@ fieldset {
     height: 120px;
   }
   .hero-small-photo span {
-    font-size: 18px;
+    font-size: 1.125rem;
     padding: 8px 0;
   }
   .hero-photo-caption {
     /* Start past the 120px coffee photo so it never covers the caption. */
     padding-inline-start: 132px;
-    font-size: 10px;
+    font-size: 0.625rem;
     gap: 10px;
   }
   /* Too narrow for both phrases on one line; keep the café's name. */
@@ -1324,16 +1324,16 @@ fieldset {
   }
   .section-heading h1,
   .section-heading h2 {
-    font-size: 42px;
+    font-size: 2.625rem;
     max-width: 360px;
   }
   .section-heading p {
-    font-size: 13px;
+    font-size: 0.8125rem;
     margin-top: 14px;
   }
   .menu-note {
     margin-top: 15px;
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
   .menu-toolbar {
     margin-bottom: 20px;
@@ -1346,7 +1346,7 @@ fieldset {
   }
   .category-tabs button {
     padding: 10px 16px;
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   .menu-filter-row {
     gap: 10px;
@@ -1357,10 +1357,10 @@ fieldset {
     padding: 0 11px;
   }
   .search-box input {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   .veg-filter {
-    font-size: 11px;
+    font-size: 0.6875rem;
     padding: 8px 12px;
     gap: 6px;
     white-space: nowrap;
@@ -1379,10 +1379,10 @@ fieldset {
     height: 128px;
   }
   .menu-item .menu-item-name {
-    font-size: 16px;
+    font-size: 1rem;
   }
   .menu-item-content > p {
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 1.55;
     margin-top: 6px;
   }
@@ -1390,16 +1390,16 @@ fieldset {
     padding-top: 10px;
   }
   .menu-item-bottom > strong {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .add-button {
-    font-size: 12px;
+    font-size: 0.75rem;
     min-height: 44px;
     padding: 6px 14px;
   }
   .allergy-note {
     margin-top: 26px;
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 1.7;
   }
   .story-section {
@@ -1420,11 +1420,11 @@ fieldset {
     z-index: 1;
   }
   .story-copy h2 {
-    font-size: 42px;
+    font-size: 2.625rem;
     margin-top: 20px;
   }
   .story-copy p {
-    font-size: 13px;
+    font-size: 0.8125rem;
     margin-top: 20px;
   }
   .story-copy .text-link {
@@ -1436,7 +1436,7 @@ fieldset {
     padding-bottom: 65px;
   }
   .visit-section h2 {
-    font-size: 45px;
+    font-size: 2.8125rem;
     max-width: none;
     margin-bottom: 5px;
   }
@@ -1453,13 +1453,13 @@ fieldset {
     flex-wrap: wrap;
     margin-top: 25px;
     gap: 20px;
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   .footer-bottom {
     flex-direction: column;
     gap: 7px;
     margin-top: 28px;
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
   .floating-cart {
     min-width: 0;
@@ -1467,10 +1467,10 @@ fieldset {
     max-width: 420px;
     bottom: 16px;
     gap: 12px;
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .toast {
-    font-size: 12px;
+    font-size: 0.75rem;
     max-width: 92%;
     white-space: normal;
     width: max-content;
@@ -1479,7 +1479,7 @@ fieldset {
     padding: 19px 20px;
   }
   .cart-heading h2 {
-    font-size: 32px;
+    font-size: 2rem;
   }
   .cart-form,
   .order-preview {
@@ -1489,7 +1489,7 @@ fieldset {
     padding: 22px;
   }
   .modal-title-row h2 {
-    font-size: 29px;
+    font-size: 1.8125rem;
   }
   .item-modal-photo {
     height: 210px;
@@ -1499,7 +1499,7 @@ fieldset {
   }
   .item-add-row .button {
     padding: 12px;
-    font-size: 12px;
+    font-size: 0.75rem;
     gap: 8px;
   }
   .item-add-row .quantity-control button {
@@ -1507,10 +1507,10 @@ fieldset {
   }
   .qr-page > h1,
   .credits-page > h1 {
-    font-size: 44px;
+    font-size: 2.75rem;
   }
   .qr-intro {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
   .qr-page,
   .credits-page {
@@ -1538,7 +1538,7 @@ fieldset {
 }
 @media (max-width: 760px) {
   .hero h1 {
-    font-size: clamp(40px, 12vw, 70px);
+    font-size: clamp(2.5rem, 12vw, 4.375rem);
   }
   .hero h1 span {
     white-space: nowrap;
@@ -1552,13 +1552,13 @@ fieldset {
     text-overflow: ellipsis;
   }
   .brand {
-    font-size: 22px;
+    font-size: 1.375rem;
   }
   .header-actions {
     gap: 9px;
   }
   .menu-item-content > p {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .menu-item {
     min-height: 140px;
@@ -1570,20 +1570,20 @@ fieldset {
     min-height: 44px;
   }
   .hero-copy > p {
-    font-size: 16px;
+    font-size: 1rem;
   }
 }
 html[lang="fr"] .hero h1 {
-  font-size: clamp(36px, 4.8vw, 76px);
+  font-size: clamp(2.25rem, 4.8vw, 4.75rem);
 }
 @media (max-width: 760px) {
   html[lang="fr"] .hero h1 {
-    font-size: clamp(30px, 9.5vw, 62px);
+    font-size: clamp(1.875rem, 9.5vw, 3.875rem);
   }
 }
 @media (max-width: 350px) {
   .brand {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
   .brand svg {
     width: 27px;
@@ -1595,13 +1595,13 @@ html[lang="fr"] .hero h1 {
     padding: 10px;
   }
   .language-select select {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   .site-header > .brand {
     max-width: calc(100% - 100px);
   }
   .veg-filter {
-    font-size: 10px;
+    font-size: 0.625rem;
     padding: 8px;
   }
   .menu-item {
@@ -1612,10 +1612,10 @@ html[lang="fr"] .hero h1 {
     width: 90px;
   }
   .menu-item .menu-item-name {
-    font-size: 15px;
+    font-size: 0.9375rem;
   }
   .menu-item-content > p {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 }
 @media (max-width: 760px) {
@@ -1636,20 +1636,20 @@ html[lang="fr"] .hero h1 {
     height: 44px;
   }
   .hero-photo-caption {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   .hero-small-photo span {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
   .section-heading p {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
   .footer-bottom {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 }
 .menu-item-content > p {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-app,
 .admin-qr-layout {
@@ -1674,7 +1674,7 @@ html[lang="fr"] .hero h1 {
   margin-top: 36px;
 }
 .privacy-page h2 {
-  font-size: 24px;
+  font-size: 1.5rem;
   margin: 0 0 10px;
 }
 .privacy-page section p {
@@ -1691,7 +1691,7 @@ html[lang="fr"] .hero h1 {
   border-radius: 999px;
   background: none;
   padding: 4px 12px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   opacity: 0.6;
   cursor: pointer;
 }
@@ -1700,7 +1700,7 @@ html[lang="fr"] .hero h1 {
 }
 .privacy-updated {
   margin-top: 40px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   opacity: 0.7;
 }
 /* Focus lands on the dialog itself when it opens; no ring for that. */
@@ -1736,7 +1736,7 @@ html[lang="ar"] :is(h1, h2, .brand, .hero-small-photo span) {
 .order-types label,
 .quantity-control output,
 .cart-heading h2 span {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .section-heading p,
 .menu-item-content > p,
@@ -1752,7 +1752,7 @@ html[lang="ar"] :is(h1, h2, .brand, .hero-small-photo span) {
 .search-box input,
 .order-totals p,
 .toast {
-  font-size: 16px;
+  font-size: 1rem;
 }
 .menu-item-content > p {
   line-height: 1.55;
@@ -1761,11 +1761,11 @@ html[lang="ar"] :is(h1, h2, .brand, .hero-small-photo span) {
   color: var(--ink-soft);
 }
 .menu-item .menu-item-name {
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 .menu-item-bottom > strong,
 .cart-line-title h3 {
-  font-size: 16px;
+  font-size: 1rem;
   font-variant-numeric: tabular-nums;
 }
 .button,
@@ -1774,7 +1774,7 @@ html[lang="ar"] :is(h1, h2, .brand, .hero-small-photo span) {
 .main-nav,
 .text-link,
 .visit-detail h3 {
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 
 /* ------------------------------------------------------------------
@@ -1969,7 +1969,7 @@ dialog.cart-modal.closing .modal-inside {
   display: block;
   margin-top: 6px;
   color: var(--error);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 .form-field [aria-invalid="true"] {
@@ -1996,12 +1996,12 @@ dialog.cart-modal.closing .modal-inside {
 }
 .order-sent h3 {
   font-family: var(--serif);
-  font-size: 30px;
+  font-size: 1.875rem;
   font-weight: 500;
   line-height: 1.15;
 }
 .order-sent p {
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.55;
 }
 .order-sent .text-link {
@@ -2058,14 +2058,14 @@ dialog.cart-modal.closing .modal-inside {
 /* The QR menu page: the title is the first screen's focal point, and the
    line under it says plainly what to do here. */
 .menu-first .section-heading h1 {
-  font-size: clamp(56px, 7vw, 104px);
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
 }
 .menu-first .section-heading p {
-  font-size: 18px;
+  font-size: 1.125rem;
   max-width: 36ch;
 }
 .hero-footnote {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 /* ------------------------------------------------------------------
@@ -2143,7 +2143,7 @@ dialog.cart-modal.closing .modal-inside {
   --admin-preparing-bg: #e6efe0;
   color: var(--admin-ink);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.5;
 }
 .admin-app *,
@@ -2195,7 +2195,7 @@ dialog.cart-modal.closing .modal-inside {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -1px;
 }
@@ -2221,7 +2221,7 @@ dialog.cart-modal.closing .modal-inside {
   display: grid;
   place-items: center;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   flex-shrink: 0;
@@ -2231,10 +2231,10 @@ dialog.cart-modal.closing .modal-inside {
   display: block;
 }
 .admin-workspace strong {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-workspace div > span {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   margin-top: 2px;
 }
@@ -2275,7 +2275,7 @@ dialog.cart-modal.closing .modal-inside {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin-bottom: 26px;
 }
 .admin-account {
@@ -2292,16 +2292,16 @@ dialog.cart-modal.closing .modal-inside {
   height: 32px;
   display: grid;
   place-items: center;
-  font-size: 13px;
+  font-size: 0.8125rem;
   flex-shrink: 0;
 }
 .admin-account strong,
 .admin-account small {
   display: block;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-account small {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--admin-muted);
   margin-top: 2px;
 }
@@ -2315,7 +2315,7 @@ dialog.cart-modal.closing .modal-inside {
   justify-content: space-between;
   padding: 0 34px 0 25px;
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-topbar a {
   display: flex;
@@ -2344,7 +2344,7 @@ dialog.cart-modal.closing .modal-inside {
   margin-bottom: 26px;
 }
 .admin-title-row h1 {
-  font-size: 26px;
+  font-size: 1.625rem;
   font-weight: 500;
   line-height: 1.2;
   letter-spacing: -0.6px;
@@ -2354,7 +2354,7 @@ dialog.cart-modal.closing .modal-inside {
 .admin-title-row p {
   color: var(--admin-muted);
   margin: 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-primary,
 .admin-secondary {
@@ -2366,7 +2366,7 @@ dialog.cart-modal.closing .modal-inside {
   justify-content: center;
   gap: 8px;
   padding: 8px 14px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   white-space: nowrap;
   transition:
@@ -2411,13 +2411,13 @@ dialog.cart-modal.closing .modal-inside {
 .admin-signin h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 1.2;
   margin: 0 0 8px;
   letter-spacing: -0.4px;
 }
 .admin-signin p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   margin: 0;
   max-width: 560px;
@@ -2436,7 +2436,7 @@ dialog.cart-modal.closing .modal-inside {
   border-bottom: 2px solid transparent;
   padding: 10px 0 13px;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-category-tabs button.active {
   border-bottom-color: var(--admin-accent);
@@ -2456,7 +2456,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-list-toolbar > div > span {
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   white-space: nowrap;
 }
 .admin-search {
@@ -2476,7 +2476,7 @@ dialog.cart-modal.closing .modal-inside {
   border: 0;
   outline: 0;
   background: none;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-ink);
 }
 /* The list closes at the sheet edges: flexible identity + 120 + 140 + 62 + 3 × 24px. */
@@ -2489,7 +2489,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-dish-head {
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   padding: 12px 0;
 }
 .admin-dish-head span:nth-child(2) {
@@ -2515,24 +2515,24 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-dish-identity strong {
   display: block;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 .admin-dish-identity span {
   display: block;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   margin-top: 5px;
 }
 .admin-dish-price {
   text-align: end;
-  font-size: 13px;
+  font-size: 0.8125rem;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 .admin-dish-price small {
   color: var(--admin-muted);
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 .admin-availability {
   border: 0;
@@ -2541,7 +2541,7 @@ dialog.cart-modal.closing .modal-inside {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px !important;
+  font-size: 0.8125rem !important;
   color: var(--admin-ink);
   text-align: start;
 }
@@ -2564,11 +2564,11 @@ dialog.cart-modal.closing .modal-inside {
   gap: 3px;
   background: none;
   border: 0;
-  font-size: 13px !important;
+  font-size: 0.8125rem !important;
   padding: 8px 0;
 }
 .admin-readonly {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--admin-muted);
   text-align: end;
 }
@@ -2579,7 +2579,7 @@ dialog.cart-modal.closing .modal-inside {
   margin: 0 0 10px;
 }
 .admin-note {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   line-height: 1.65;
   margin: 18px 0;
@@ -2592,7 +2592,7 @@ dialog.cart-modal.closing .modal-inside {
   padding: 12px 16px;
   border-radius: 6px;
   margin-bottom: 18px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-message p {
   margin: 0;
@@ -2617,11 +2617,11 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-unsaved {
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: -8px 0 22px;
 }
 .admin-notice {
-  font-size: 13px;
+  font-size: 0.8125rem;
   background: var(--admin-notice-bg);
   border-radius: 6px;
   padding: 14px 16px;
@@ -2629,7 +2629,7 @@ dialog.cart-modal.closing .modal-inside {
   margin: 0 0 24px;
 }
 .admin-loading > p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-skeleton-row {
@@ -2665,7 +2665,7 @@ dialog.cart-modal.closing .modal-inside {
   border: 0;
   padding: 8px 0;
   color: var(--admin-ink);
-  font-size: 13px !important;
+  font-size: 0.8125rem !important;
 }
 .admin-text-button:hover {
   text-decoration: underline;
@@ -2681,7 +2681,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-field {
   display: block;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   margin-bottom: 20px;
 }
@@ -2696,7 +2696,7 @@ dialog.cart-modal.closing .modal-inside {
   min-height: 40px;
   background: var(--admin-surface);
   color: var(--admin-ink);
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-top: 8px;
   outline-offset: 2px;
 }
@@ -2707,7 +2707,7 @@ dialog.cart-modal.closing .modal-inside {
 .admin-field small {
   display: block;
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 400;
   line-height: 1.5;
   margin-top: 8px;
@@ -2729,7 +2729,7 @@ dialog.cart-modal.closing .modal-inside {
   background: none;
   padding: 8px 0;
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-language-tabs button.active {
   color: var(--admin-ink);
@@ -2739,7 +2739,7 @@ dialog.cart-modal.closing .modal-inside {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: 6px 0 28px;
 }
 .admin-checkbox input {
@@ -2754,7 +2754,7 @@ dialog.cart-modal.closing .modal-inside {
   margin-bottom: 10px;
 }
 .admin-section-title h2 {
-  font-size: 16px;
+  font-size: 1rem;
   margin: 0;
   font-weight: 500;
 }
@@ -2814,25 +2814,25 @@ dialog.cart-modal.closing .modal-inside {
 .admin-item-preview h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 1.2;
   margin: 14px 0 10px;
 }
 .admin-item-preview p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.7;
   color: var(--admin-muted);
   margin: 0 0 24px;
 }
 .admin-item-preview strong {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 500;
   display: block;
   font-variant-numeric: tabular-nums;
 }
 .admin-preview-label,
 .admin-preview-status {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-preview-status {
@@ -2860,13 +2860,13 @@ dialog.cart-modal.closing .modal-inside {
   border-bottom: 0;
 }
 .admin-setting-section h2 {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 500;
   line-height: 1.4;
   margin: 15px 0 8px;
 }
 .admin-setting-section > div > p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   line-height: 1.7;
   margin: 0;
@@ -2899,14 +2899,14 @@ dialog.cart-modal.closing .modal-inside {
 .admin-qr-settings h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: 1.75rem;
   line-height: 1.2;
   letter-spacing: -0.5px;
   margin: 0 0 14px;
 }
 .admin-qr-settings > p:first-of-type {
   color: var(--admin-muted);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.7;
   margin: 0 0 28px;
 }
@@ -2939,12 +2939,12 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-qr-name {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   margin: 0 0 27px;
 }
 .admin-qr-headline {
   font-family: var(--serif);
-  font-size: 27px;
+  font-size: 1.6875rem;
   line-height: 1.12;
   letter-spacing: -0.5px;
   margin: 0;
@@ -2969,17 +2969,17 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-qr-instruction {
   margin: 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-qr-table {
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: 6px 0 28px;
 }
 .admin-qr-brand {
   padding-top: 18px;
   border-top: 1px solid var(--admin-line);
-  font-size: 10px;
+  font-size: 0.625rem;
   color: var(--admin-muted);
 }
 .admin-qr-brand strong {
@@ -2987,7 +2987,7 @@ dialog.cart-modal.closing .modal-inside {
   font-weight: 500;
 }
 .admin-preview-caption {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   margin-top: 15px;
 }
@@ -3005,7 +3005,7 @@ dialog.cart-modal.closing .modal-inside {
   overflow-wrap: anywhere;
   line-height: 1.5;
   padding: 10px 12px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-copy-link a svg {
   display: inline-block;
@@ -3028,10 +3028,10 @@ dialog.cart-modal.closing .modal-inside {
   align-items: center;
   gap: 6px;
   color: var(--admin-accent);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-error {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-error);
 }
 /* Photo upload */
@@ -3068,7 +3068,7 @@ dialog.cart-modal.closing .modal-inside {
   align-items: center;
   padding: 0 0 0 12px;
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 400;
   white-space: nowrap;
 }
@@ -3118,7 +3118,7 @@ dialog.cart-modal.closing .modal-inside {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-category-meta span {
@@ -3141,12 +3141,12 @@ dialog.cart-modal.closing .modal-inside {
   border-radius: 8px;
 }
 .admin-order-summary dt {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-order-summary dd {
   margin: 4px 0 0;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
@@ -3177,7 +3177,7 @@ dialog.cart-modal.closing .modal-inside {
   background: none;
   color: var(--admin-ink);
   font: inherit;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
 }
 .admin-icon-text:hover {
@@ -3188,7 +3188,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-order-checked {
   margin: 8px 0 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-order-toast {
@@ -3200,7 +3200,7 @@ dialog.cart-modal.closing .modal-inside {
   border-radius: 8px;
   background: var(--admin-ink);
   color: var(--admin-on-ink);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 .admin-order-fresh {
@@ -3223,7 +3223,7 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-order-help {
   margin-top: 24px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-order-help summary {
@@ -3250,7 +3250,7 @@ dialog.cart-modal.closing .modal-inside {
   background: none;
   color: inherit;
   font: inherit;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
 }
 .admin-order-list {
@@ -3261,7 +3261,7 @@ dialog.cart-modal.closing .modal-inside {
 .admin-order {
   padding: 18px 0;
   border-bottom: 1px solid var(--admin-line);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-order-head {
   display: flex;
@@ -3270,14 +3270,14 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-order-head strong {
   display: block;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 .admin-order-head span,
 .admin-order-head time {
   display: block;
   margin-top: 3px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-order-total {
@@ -3408,7 +3408,7 @@ dialog.cart-modal.closing .modal-inside {
     padding: 8px 10px;
   }
   .admin-order-summary dd {
-    font-size: 15px;
+    font-size: 0.9375rem;
   }
   .admin-order-tools span {
     display: none;
@@ -3432,10 +3432,10 @@ dialog.cart-modal.closing .modal-inside {
     margin-bottom: 24px;
   }
   .admin-title-row h1 {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
   .admin-title-row p {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-title-row > .admin-primary {
     padding: 8px 10px;
@@ -3447,10 +3447,10 @@ dialog.cart-modal.closing .modal-inside {
     margin-bottom: 24px;
   }
   .admin-signin h2 {
-    font-size: 23px;
+    font-size: 1.4375rem;
   }
   .admin-signin p {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-primary,
   .admin-secondary {
@@ -3494,10 +3494,10 @@ dialog.cart-modal.closing .modal-inside {
     height: 65px;
   }
   .admin-dish-identity strong {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-dish-identity span {
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
   .admin-dish-price {
     grid-column: 2;
@@ -3507,7 +3507,7 @@ dialog.cart-modal.closing .modal-inside {
   .admin-availability {
     grid-column: 2;
     grid-row: 2;
-    font-size: 11px !important;
+    font-size: 0.6875rem !important;
     justify-content: flex-end;
     min-height: 32px;
     gap: 5px;
@@ -3540,18 +3540,18 @@ dialog.cart-modal.closing .modal-inside {
     padding: 15px;
   }
   .admin-item-preview h2 {
-    font-size: 20px;
+    font-size: 1.25rem;
     margin: 7px 0;
   }
   .admin-item-preview p {
     display: none;
   }
   .admin-item-preview strong {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-preview-label,
   .admin-preview-status {
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
   .admin-edit-fields {
     width: 100%;
@@ -3566,7 +3566,7 @@ dialog.cart-modal.closing .modal-inside {
   .admin-field input,
   .admin-field textarea,
   .admin-field select {
-    font-size: 16px;
+    font-size: 1rem;
     min-height: 44px;
   }
   .admin-field-pair {
@@ -3604,10 +3604,10 @@ dialog.cart-modal.closing .modal-inside {
     width: 100%;
   }
   .admin-qr-settings h2 {
-    font-size: 26px;
+    font-size: 1.625rem;
   }
   .admin-qr-settings > p:first-of-type {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-qr-preview {
     padding: 24px;
@@ -3617,7 +3617,7 @@ dialog.cart-modal.closing .modal-inside {
   }
   .admin-qr-actions button {
     flex: 1;
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-message-error button {
     min-height: 40px;
@@ -3651,7 +3651,7 @@ dialog.cart-modal.closing .modal-inside {
 
 .admin-sidebar-bottom > a.admin-signout {
   display: inline-block;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: 15px 0 0 42px;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -3666,7 +3666,7 @@ dialog.cart-modal.closing .modal-inside {
   margin-inline-start: 8px;
   padding: 2px 8px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   vertical-align: 2px;
   background: var(--admin-active);
@@ -3725,10 +3725,10 @@ dialog.cart-modal.closing .modal-inside {
 }
 .admin-signin-form .admin-notice {
   margin: 0 0 14px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-code-input {
-  font-size: 22px !important;
+  font-size: 1.375rem !important;
   letter-spacing: 8px;
   font-variant-numeric: tabular-nums;
 }
