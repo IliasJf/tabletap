@@ -71,8 +71,9 @@ function initials(name: string): string {
         .charAt(0),
     )
     .filter(Boolean);
-  return (letters.length > 1 ? letters[0] + letters.at(-1) : letters[0] || "T")
-    .toLocaleUpperCase();
+  return (
+    letters.length > 1 ? letters[0] + letters.at(-1) : letters[0] || "T"
+  ).toLocaleUpperCase();
 }
 
 export default function AdminPage() {
@@ -287,7 +288,6 @@ export default function AdminPage() {
     <AdminCopyContext.Provider value={{ t, language: uiLanguage }}>
       <div
         className="admin-app"
-        data-ui
         lang={uiLanguage}
         dir={uiLanguage === "ar" ? "rtl" : "ltr"}
       >

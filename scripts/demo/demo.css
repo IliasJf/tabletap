@@ -1,26 +1,20 @@
-/* Floating badge shown only on the GitHub Pages demo. */
+/* A slim bar at the top of every page, shown only on the GitHub Pages demo. */
 .demo-badge {
-  position: fixed;
-  left: 12px;
-  bottom: 12px;
-  z-index: 1000;
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 4px 10px;
-  max-width: calc(100vw - 24px);
-  padding: 8px 12px;
-  border-radius: 10px;
+  gap: 0 12px;
+  padding: 0 16px;
   background: #252b20;
   color: #f8f7f2;
   font:
-    12px/1.4 "DM Sans",
+    13px/1.4 "DM Sans",
     system-ui,
     sans-serif;
-  box-shadow: 0 6px 20px rgb(0 0 0 / 0.18);
 }
 .demo-badge span {
-  opacity: 0.75;
+  opacity: 0.85;
 }
 .demo-badge button,
 .demo-badge a {
@@ -36,12 +30,14 @@
   text-underline-offset: 3px;
   cursor: pointer;
 }
+/* One line on phones: the short label, Reset and Code. */
+@media (max-width: 600px) {
+  .demo-badge-more {
+    display: none;
+  }
+}
 @media print {
   .demo-badge {
     display: none;
   }
-}
-/* Keep the end of every page clear of the badge. */
-body {
-  padding-bottom: 64px;
 }

@@ -254,6 +254,10 @@ button:active,
   padding-inline-start: 40px;
   padding-bottom: 50px;
 }
+.hero-main-frame {
+  overflow: hidden;
+  line-height: 0;
+}
 .hero-main-photo {
   width: 100%;
   height: 490px;
@@ -431,9 +435,10 @@ button:active,
   padding: 0;
   border: 0;
   background: var(--surface);
-  flex: 0 0 130px;
-  width: 130px;
-  height: 140px;
+  /* Food sells on its photo: big enough to see the dish, not a thumbnail. */
+  flex: 0 0 180px;
+  width: 180px;
+  height: 180px;
   overflow: hidden;
   border-radius: 4px;
 }
@@ -1142,7 +1147,8 @@ fieldset {
     padding-top: 30px;
   }
   .hero h1 {
-    font-size: 72px;
+    /* Two lines at every width: 72px at 1100px, about 51px at 768px. */
+    font-size: min(72px, 6.6vw);
   }
   .hero-main-photo {
     height: 430px;
@@ -1167,9 +1173,9 @@ fieldset {
     gap: 14px;
   }
   .menu-image-button {
-    width: 100px;
-    flex-basis: 100px;
-    height: 125px;
+    width: 140px;
+    flex-basis: 140px;
+    height: 150px;
   }
   .menu-item .menu-item-name {
     font-size: 15px;
@@ -1347,9 +1353,9 @@ fieldset {
     padding: 10px 0;
   }
   .menu-image-button {
-    width: 105px;
-    flex-basis: 105px;
-    height: 120px;
+    width: 112px;
+    flex-basis: 112px;
+    height: 128px;
   }
   .menu-item .menu-item-name {
     font-size: 16px;
@@ -1685,4 +1691,185 @@ html[lang="fr"] .hero h1 {
 html[lang="ar"] :is(h1, h2, .brand, .hero-small-photo span) {
   letter-spacing: normal;
   line-height: 1.35;
+}
+
+/* ------------------------------------------------------------------
+   Type scale. Three reading steps instead of ten: 13px for notes and
+   labels, 16px for body text and every input (16px also stops iPhones
+   zooming into a field), 18px for dish names. Display sizes stay above.
+   ------------------------------------------------------------------ */
+.hero-photo-caption,
+.menu-note,
+.veg-filter,
+.unavailable .add-button,
+.allergy-note,
+.footer-links,
+.footer-bottom,
+.cart-line-body > p,
+.cart-line-title > strong,
+.optional,
+.confirmation-note,
+.demo-warning,
+.photo-fallback,
+.language-select select,
+.order-types label,
+.quantity-control output,
+.cart-heading h2 span {
+  font-size: 13px;
+}
+.section-heading p,
+.menu-item-content > p,
+.story-copy p,
+.visit-detail p,
+.item-modal-body > p,
+.table-notice,
+.empty-cart p,
+.extras label,
+.form-field,
+.form-field input,
+.form-field textarea,
+.search-box input,
+.order-totals p,
+.toast {
+  font-size: 16px;
+}
+.menu-item-content > p {
+  line-height: 1.55;
+  max-width: 34ch;
+  /* Near-ink, not soft grey: descriptions are what people read to choose. */
+  color: #444a3e;
+}
+.menu-item .menu-item-name {
+  font-size: 18px;
+}
+.menu-item-bottom > strong,
+.cart-line-title h3 {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.button,
+.category-tabs button,
+.add-button,
+.main-nav,
+.text-link,
+.visit-detail h3 {
+  font-size: 15px;
+}
+
+/* ------------------------------------------------------------------
+   Motion. Content is only hidden once the script has confirmed motion
+   is wanted (html.motion-ok), so nothing stays invisible without it.
+   Transform and opacity only.
+   ------------------------------------------------------------------ */
+html.motion-ok [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--reveal-i, 0) * 70ms);
+}
+html.motion-ok [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+/* Press feedback on every control people tap. */
+.button,
+.add-button,
+.bag-button,
+.category-tabs button,
+.veg-filter,
+.close-button,
+.quantity-control button {
+  transition:
+    transform 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+.button:active,
+.add-button:active:not(:disabled),
+.bag-button:active,
+.category-tabs button:active,
+.veg-filter:active,
+.close-button:active,
+.quantity-control button:active {
+  transform: scale(0.96);
+}
+/* The cart count pops when something is added. */
+.bag-button.bump {
+  animation: cart-bump 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+@keyframes cart-bump {
+  40% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: none;
+  }
+}
+/* The hero photograph drifts very slowly, like a held breath. */
+.hero-main-photo {
+  animation: hero-drift 22s ease-in-out infinite alternate;
+  transform-origin: 60% 40%;
+}
+@keyframes hero-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+/* Dialogs rise in; the cart slides from the side it lives on. */
+dialog[open] .modal-inside {
+  animation: dialog-rise 0.32s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+dialog.cart-modal[open] .modal-inside {
+  animation: drawer-in 0.34s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@keyframes dialog-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+@keyframes drawer-in {
+  from {
+    transform: translateX(32px);
+    opacity: 0;
+  }
+}
+[dir="rtl"] dialog.cart-modal[open] .modal-inside {
+  animation-name: drawer-in-rtl;
+}
+@keyframes drawer-in-rtl {
+  from {
+    transform: translateX(-32px);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.motion-ok [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hero-main-photo,
+  .bag-button.bump,
+  dialog[open] .modal-inside {
+    animation: none;
+  }
+}
+
+/* The QR menu page: the title is the first screen's focal point, and the
+   line under it says plainly what to do here. */
+.menu-first .section-heading h1 {
+  font-size: clamp(56px, 7vw, 104px);
+}
+.menu-first .section-heading p {
+  font-size: 18px;
+  max-width: 36ch;
+}
+.hero-footnote {
+  font-size: 13px;
 }

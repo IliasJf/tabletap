@@ -67,7 +67,7 @@ new MutationObserver((records) => {
 const badge = document.createElement("div");
 badge.className = "demo-badge";
 badge.innerHTML =
-  '<strong>Live demo</strong><span>Changes stay in your browser.</span><button type="button">Reset demo</button><a href="https://github.com/IliasJf/tabletap" target="_blank" rel="noopener noreferrer">Code</a>';
+  '<span>Live demo<span class="demo-badge-more">: changes stay in your browser</span>.</span><button type="button">Reset demo</button><a href="https://github.com/IliasJf/tabletap" target="_blank" rel="noopener noreferrer">Code</a>';
 badge.querySelector("button")!.addEventListener("click", () => {
   if (
     window.confirm(
@@ -78,7 +78,7 @@ badge.querySelector("button")!.addEventListener("click", () => {
     window.location.href = BASE;
   }
 });
-document.body.appendChild(badge);
+document.body.insertBefore(badge, document.body.firstChild);
 
 const path = window.location.pathname.startsWith(BASE)
   ? "/" + window.location.pathname.slice(BASE.length)

@@ -170,6 +170,8 @@ export default function Restaurant({
     [copied, setCopied] = useState(false),
     [orderId, setOrderId] = useState("");
   const DishHeading = menuOnly ? "h2" : "h3";
+  const bagRef = useRef<HTMLButtonElement>(null);
+  const lastCount = useRef<number | null>(null);
   // Section tabs scroll sideways on phones; fade the edge that hides more tabs.
   const tabsRef = useRef<HTMLDivElement>(null);
   const [tabsMore, setTabsMore] = useState({ start: false, end: false });
@@ -296,6 +298,37 @@ export default function Restaurant({
     const timer = setTimeout(() => setNotice(""), 3000);
     return () => clearTimeout(timer);
   }, [notice]);
+  // The cart button pops when the count goes up, so adding feels confirmed.
+  useEffect(() => {
+    const previous = lastCount.current;
+    lastCount.current = totals.itemCount;
+    const bag = bagRef.current;
+    if (!bag || previous === null || totals.itemCount <= previous) return;
+    bag.classList.remove("bump");
+    void bag.offsetWidth; // restart the animation on quick repeat adds
+    bag.classList.add("bump");
+  }, [totals.itemCount]);
+  // Sections and dishes rise in as they reach the screen. Content is only
+  // hidden once this runs (html.motion-ok), and never with reduced motion.
+  useEffect(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const root = document.documentElement;
+    root.classList.add("motion-ok");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            observer.unobserve(entry.target);
+          }
+      },
+      { rootMargin: "0px 0px -8% 0px" },
+    );
+    document
+      .querySelectorAll("[data-reveal]:not(.is-in)")
+      .forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, [loading, category, search, vegetarian, language]);
   const filtered = catalog.items.filter(
     (item) =>
       (category === "all" || item.category === category) &&
@@ -410,6 +443,7 @@ export default function Restaurant({
             </select>
           </label>
           <button
+            ref={bagRef}
             className="bag-button"
             aria-label={`${t.cart} (${totals.itemCount})`}
             onClick={() => setCartOpen(true)}
@@ -422,7 +456,7 @@ export default function Restaurant({
       {!menuOnly && (
         <section className="hero shell" aria-labelledby="hero-title">
           <div className="hero-copy">
-            <h1 id="hero-title">
+            <h1 id="hero-title" data-reveal>
               {(catalog.settings.tagline === "Good food. Slow mornings."
                 ? t.hero
                 : catalog.settings.tagline
@@ -432,8 +466,15 @@ export default function Restaurant({
                   <span key={i}>{line}</span>
                 ))}
             </h1>
-            <p>{t.intro}</p>
-            <a href="#menu" className="button primary">
+            <p data-reveal style={{ "--reveal-i": 1 } as React.CSSProperties}>
+              {t.intro}
+            </p>
+            <a
+              href="#menu"
+              className="button primary"
+              data-reveal
+              style={{ "--reveal-i": 2 } as React.CSSProperties}
+            >
               {t.explore}
               <ArrowDown size={18} />
             </a>
@@ -448,13 +489,20 @@ export default function Restaurant({
               </span>
             </div>
           </div>
-          <div className="hero-photos">
-            <Photo
-              src="/images/toast.jpg"
-              alt="Avocado toast with tomatoes on a ceramic plate"
-              className="hero-main-photo"
-              eager
-            />
+          <div
+            className="hero-photos"
+            data-reveal
+            style={{ "--reveal-i": 1 } as React.CSSProperties}
+          >
+            {/* The frame clips the photo's slow drift. */}
+            <div className="hero-main-frame">
+              <Photo
+                src="/images/toast.jpg"
+                alt="Avocado toast with tomatoes on a ceramic plate"
+                className="hero-main-photo"
+                eager
+              />
+            </div>
             <div className="hero-small-photo">
               <Photo src="/images/coffee.jpg" alt="Freshly made coffee" eager />
               <span>
@@ -483,16 +531,19 @@ export default function Restaurant({
           id="menu"
           className={`menu-section shell ${menuOnly ? "menu-first" : ""}`}
           aria-labelledby="menu-title"
-          data-ui
         >
-          <div className="section-heading">
+          <div className="section-heading" data-reveal>
             <div>
               {menuOnly ? (
                 <h1 id="menu-title">{t.menu}</h1>
               ) : (
                 <h2 id="menu-title">{t.fresh}</h2>
               )}
-              <p>{t.menuIntro}</p>
+              <p>
+                {menuOnly
+                  ? t.menuHowTo.replace("{restaurant}", restaurantName)
+                  : t.menuIntro}
+              </p>
             </div>
             {catalog.settings.hours && (
               <span className="menu-note">
@@ -598,10 +649,12 @@ export default function Restaurant({
             </div>
           ) : (
             <div className="menu-grid">
-              {filtered.map((item) => (
+              {filtered.map((item, index) => (
                 <article
                   className={`menu-item ${!item.available ? "unavailable" : ""}`}
                   key={item.id}
+                  data-reveal
+                  style={{ "--reveal-i": index % 4 } as React.CSSProperties}
                 >
                   <button
                     className="menu-image-button"
@@ -662,13 +715,17 @@ export default function Restaurant({
           </p>
         </section>
         <section id="story" className="story-section shell">
-          <div className="story-photo">
+          <div className="story-photo" data-reveal>
             <Photo
               src="/images/cafe.jpg"
               alt="Café interior with wooden tables and natural light"
             />
           </div>
-          <div className="story-copy">
+          <div
+            className="story-copy"
+            data-reveal
+            style={{ "--reveal-i": 1 } as React.CSSProperties}
+          >
             <Leaf size={30} strokeWidth={1.25} />
             <h2>
               {t.about.split("\n").map((line, i) => (
@@ -683,15 +740,23 @@ export default function Restaurant({
           </div>
         </section>
         <section id="visit" className="visit-section shell">
-          <h2>{t.visitTitle}</h2>
-          <div className="visit-detail">
+          <h2 data-reveal>{t.visitTitle}</h2>
+          <div
+            className="visit-detail"
+            data-reveal
+            style={{ "--reveal-i": 1 } as React.CSSProperties}
+          >
             <MapPin size={21} />
             <div>
               <h3>{t.find}</h3>
               <p>{catalog.settings.address}</p>
             </div>
           </div>
-          <div className="visit-detail">
+          <div
+            className="visit-detail"
+            data-reveal
+            style={{ "--reveal-i": 2 } as React.CSSProperties}
+          >
             <Clock3 size={21} />
             <div>
               <h3>{t.hours}</h3>

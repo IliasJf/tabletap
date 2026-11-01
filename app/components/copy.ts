@@ -10,6 +10,8 @@ export const copy = {
     explore: "Explore the menu",
     fresh: "Made fresh. Enjoyed slowly.",
     menuIntro: "A little sweet, a little savory. Always made with care.",
+    menuHowTo:
+      "Choose your dishes, then send your order to {restaurant} on WhatsApp.",
     all: "Everything",
     brunch: "All-day brunch",
     mains: "Fresh plates",
@@ -80,6 +82,8 @@ export const copy = {
     explore: "Découvrir la carte",
     fresh: "Fait maison. À savourer.",
     menuIntro: "Un peu de sucré, un peu de salé. Toujours préparé avec soin.",
+    menuHowTo:
+      "Choisissez vos plats, puis envoyez votre commande à {restaurant} sur WhatsApp.",
     all: "Tout",
     brunch: "Brunch toute la journée",
     mains: "Assiettes fraîches",
@@ -149,6 +153,7 @@ export const copy = {
     explore: "تصفح القائمة",
     fresh: "طازج وبكل عناية.",
     menuIntro: "قليل من الحلو وقليل من المالح. محضر دائماً بحب.",
+    menuHowTo: "اختر أطباقك، ثم أرسل طلبك إلى {restaurant} عبر واتساب.",
     all: "الكل",
     brunch: "فطور طوال اليوم",
     mains: "أطباق طازجة",

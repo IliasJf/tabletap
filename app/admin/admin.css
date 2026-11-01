@@ -101,7 +101,7 @@
   font-size: 13px;
 }
 .admin-workspace div > span {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--admin-muted);
   margin-top: 2px;
 }
@@ -142,7 +142,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 13px;
   margin-bottom: 26px;
 }
 .admin-account {
@@ -159,13 +159,13 @@
   height: 32px;
   display: grid;
   place-items: center;
-  font-size: 12px;
+  font-size: 13px;
   flex-shrink: 0;
 }
 .admin-account strong,
 .admin-account small {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
 }
 .admin-account small {
   font-size: 11px;
@@ -182,7 +182,7 @@
   justify-content: space-between;
   padding: 0 34px 0 25px;
   color: var(--admin-muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 .admin-topbar a {
   display: flex;
@@ -323,7 +323,7 @@
 }
 .admin-list-toolbar > div > span {
   color: var(--admin-muted);
-  font-size: 12px;
+  font-size: 13px;
   white-space: nowrap;
 }
 .admin-search {
@@ -356,7 +356,7 @@
 }
 .admin-dish-head {
   color: var(--admin-muted);
-  font-size: 12px;
+  font-size: 13px;
   padding: 12px 0;
 }
 .admin-dish-head span:nth-child(2) {
@@ -387,7 +387,7 @@
 }
 .admin-dish-identity span {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--admin-muted);
   margin-top: 5px;
 }
@@ -408,7 +408,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px !important;
+  font-size: 13px !important;
   color: var(--admin-ink);
   text-align: start;
 }
@@ -431,7 +431,7 @@
   gap: 3px;
   background: none;
   border: 0;
-  font-size: 12px !important;
+  font-size: 13px !important;
   padding: 8px 0;
 }
 .admin-readonly {
@@ -446,7 +446,7 @@
   margin: 0 0 10px;
 }
 .admin-note {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--admin-muted);
   line-height: 1.65;
   margin: 18px 0;
@@ -484,7 +484,7 @@
 }
 .admin-unsaved {
   color: var(--admin-muted);
-  font-size: 12px;
+  font-size: 13px;
   margin: -8px 0 22px;
 }
 .admin-notice {
@@ -574,7 +574,7 @@
 .admin-field small {
   display: block;
   color: var(--admin-muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 400;
   line-height: 1.5;
   margin-top: 8px;
@@ -699,7 +699,7 @@
 }
 .admin-preview-label,
 .admin-preview-status {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--admin-muted);
 }
 .admin-preview-status {
@@ -840,7 +840,7 @@
 }
 .admin-qr-table {
   color: var(--admin-muted);
-  font-size: 12px;
+  font-size: 13px;
   margin: 6px 0 28px;
 }
 .admin-qr-brand {
@@ -854,7 +854,7 @@
   font-weight: 500;
 }
 .admin-preview-caption {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--admin-muted);
   margin-top: 15px;
 }
@@ -872,7 +872,7 @@
   overflow-wrap: anywhere;
   line-height: 1.5;
   padding: 10px 12px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .admin-copy-link a svg {
   display: inline-block;
@@ -895,7 +895,7 @@
   align-items: center;
   gap: 6px;
   color: var(--admin-accent);
-  font-size: 12px;
+  font-size: 13px;
 }
 .admin-error {
   font-size: 13px;
@@ -985,7 +985,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--admin-muted);
 }
 .admin-category-meta span {
@@ -1008,7 +1008,7 @@
   border-radius: 8px;
 }
 .admin-order-summary dt {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--admin-muted);
 }
 .admin-order-summary dd {
@@ -1055,7 +1055,7 @@
 }
 .admin-order-checked {
   margin: 8px 0 0;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--admin-muted);
 }
 .admin-order-toast {
@@ -1144,7 +1144,7 @@
 .admin-order-head time {
   display: block;
   margin-top: 3px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--admin-muted);
 }
 .admin-order-total {
@@ -1302,7 +1302,7 @@
     font-size: 24px;
   }
   .admin-title-row p {
-    font-size: 12px;
+    font-size: 13px;
   }
   .admin-title-row > .admin-primary {
     padding: 8px 10px;
@@ -1317,7 +1317,7 @@
     font-size: 23px;
   }
   .admin-signin p {
-    font-size: 12px;
+    font-size: 13px;
   }
   .admin-primary,
   .admin-secondary {
@@ -1484,7 +1484,7 @@
   }
   .admin-qr-actions button {
     flex: 1;
-    font-size: 12px;
+    font-size: 13px;
   }
   .admin-message-error button {
     min-height: 40px;
@@ -1518,7 +1518,7 @@
 
 .admin-sidebar-bottom > a.admin-signout {
   display: inline-block;
-  font-size: 12px;
+  font-size: 13px;
   margin: 15px 0 0 42px;
   text-decoration: underline;
   text-underline-offset: 4px;
