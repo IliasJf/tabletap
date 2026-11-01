@@ -33,7 +33,7 @@
   --admin-preparing-bg: #e6efe0;
   color: var(--admin-ink);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.5;
 }
 .admin-app *,
@@ -85,7 +85,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -1px;
 }
@@ -111,7 +111,7 @@
   display: grid;
   place-items: center;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   flex-shrink: 0;
@@ -121,10 +121,10 @@
   display: block;
 }
 .admin-workspace strong {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-workspace div > span {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   margin-top: 2px;
 }
@@ -165,7 +165,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin-bottom: 26px;
 }
 .admin-account {
@@ -182,16 +182,16 @@
   height: 32px;
   display: grid;
   place-items: center;
-  font-size: 13px;
+  font-size: 0.8125rem;
   flex-shrink: 0;
 }
 .admin-account strong,
 .admin-account small {
   display: block;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-account small {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--admin-muted);
   margin-top: 2px;
 }
@@ -205,7 +205,7 @@
   justify-content: space-between;
   padding: 0 34px 0 25px;
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-topbar a {
   display: flex;
@@ -234,7 +234,7 @@
   margin-bottom: 26px;
 }
 .admin-title-row h1 {
-  font-size: 26px;
+  font-size: 1.625rem;
   font-weight: 500;
   line-height: 1.2;
   letter-spacing: -0.6px;
@@ -244,7 +244,7 @@
 .admin-title-row p {
   color: var(--admin-muted);
   margin: 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-primary,
 .admin-secondary {
@@ -256,7 +256,7 @@
   justify-content: center;
   gap: 8px;
   padding: 8px 14px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   white-space: nowrap;
   transition:
@@ -301,13 +301,13 @@
 .admin-signin h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 1.2;
   margin: 0 0 8px;
   letter-spacing: -0.4px;
 }
 .admin-signin p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   margin: 0;
   max-width: 560px;
@@ -326,7 +326,7 @@
   border-bottom: 2px solid transparent;
   padding: 10px 0 13px;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-category-tabs button.active {
   border-bottom-color: var(--admin-accent);
@@ -346,7 +346,7 @@
 }
 .admin-list-toolbar > div > span {
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   white-space: nowrap;
 }
 .admin-search {
@@ -366,7 +366,7 @@
   border: 0;
   outline: 0;
   background: none;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-ink);
 }
 /* The list closes at the sheet edges: flexible identity + 120 + 140 + 62 + 3 × 24px. */
@@ -379,7 +379,7 @@
 }
 .admin-dish-head {
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   padding: 12px 0;
 }
 .admin-dish-head span:nth-child(2) {
@@ -405,24 +405,24 @@
 }
 .admin-dish-identity strong {
   display: block;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 .admin-dish-identity span {
   display: block;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   margin-top: 5px;
 }
 .admin-dish-price {
   text-align: end;
-  font-size: 13px;
+  font-size: 0.8125rem;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 .admin-dish-price small {
   color: var(--admin-muted);
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 .admin-availability {
   border: 0;
@@ -431,7 +431,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px !important;
+  font-size: 0.8125rem !important;
   color: var(--admin-ink);
   text-align: start;
 }
@@ -454,11 +454,11 @@
   gap: 3px;
   background: none;
   border: 0;
-  font-size: 13px !important;
+  font-size: 0.8125rem !important;
   padding: 8px 0;
 }
 .admin-readonly {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--admin-muted);
   text-align: end;
 }
@@ -469,7 +469,7 @@
   margin: 0 0 10px;
 }
 .admin-note {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   line-height: 1.65;
   margin: 18px 0;
@@ -482,7 +482,7 @@
   padding: 12px 16px;
   border-radius: 6px;
   margin-bottom: 18px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-message p {
   margin: 0;
@@ -507,11 +507,11 @@
 }
 .admin-unsaved {
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: -8px 0 22px;
 }
 .admin-notice {
-  font-size: 13px;
+  font-size: 0.8125rem;
   background: var(--admin-notice-bg);
   border-radius: 6px;
   padding: 14px 16px;
@@ -519,7 +519,7 @@
   margin: 0 0 24px;
 }
 .admin-loading > p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-skeleton-row {
@@ -555,7 +555,7 @@
   border: 0;
   padding: 8px 0;
   color: var(--admin-ink);
-  font-size: 13px !important;
+  font-size: 0.8125rem !important;
 }
 .admin-text-button:hover {
   text-decoration: underline;
@@ -571,7 +571,7 @@
 }
 .admin-field {
   display: block;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   margin-bottom: 20px;
 }
@@ -586,7 +586,7 @@
   min-height: 40px;
   background: var(--admin-surface);
   color: var(--admin-ink);
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-top: 8px;
   outline-offset: 2px;
 }
@@ -597,7 +597,7 @@
 .admin-field small {
   display: block;
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 400;
   line-height: 1.5;
   margin-top: 8px;
@@ -619,7 +619,7 @@
   background: none;
   padding: 8px 0;
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-language-tabs button.active {
   color: var(--admin-ink);
@@ -629,7 +629,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: 6px 0 28px;
 }
 .admin-checkbox input {
@@ -644,7 +644,7 @@
   margin-bottom: 10px;
 }
 .admin-section-title h2 {
-  font-size: 16px;
+  font-size: 1rem;
   margin: 0;
   font-weight: 500;
 }
@@ -704,25 +704,25 @@
 .admin-item-preview h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 1.2;
   margin: 14px 0 10px;
 }
 .admin-item-preview p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.7;
   color: var(--admin-muted);
   margin: 0 0 24px;
 }
 .admin-item-preview strong {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 500;
   display: block;
   font-variant-numeric: tabular-nums;
 }
 .admin-preview-label,
 .admin-preview-status {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-preview-status {
@@ -750,13 +750,13 @@
   border-bottom: 0;
 }
 .admin-setting-section h2 {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 500;
   line-height: 1.4;
   margin: 15px 0 8px;
 }
 .admin-setting-section > div > p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   line-height: 1.7;
   margin: 0;
@@ -789,14 +789,14 @@
 .admin-qr-settings h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: 1.75rem;
   line-height: 1.2;
   letter-spacing: -0.5px;
   margin: 0 0 14px;
 }
 .admin-qr-settings > p:first-of-type {
   color: var(--admin-muted);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.7;
   margin: 0 0 28px;
 }
@@ -829,12 +829,12 @@
 }
 .admin-qr-name {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   margin: 0 0 27px;
 }
 .admin-qr-headline {
   font-family: var(--serif);
-  font-size: 27px;
+  font-size: 1.6875rem;
   line-height: 1.12;
   letter-spacing: -0.5px;
   margin: 0;
@@ -859,17 +859,17 @@
 }
 .admin-qr-instruction {
   margin: 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-qr-table {
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: 6px 0 28px;
 }
 .admin-qr-brand {
   padding-top: 18px;
   border-top: 1px solid var(--admin-line);
-  font-size: 10px;
+  font-size: 0.625rem;
   color: var(--admin-muted);
 }
 .admin-qr-brand strong {
@@ -877,7 +877,7 @@
   font-weight: 500;
 }
 .admin-preview-caption {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
   margin-top: 15px;
 }
@@ -895,7 +895,7 @@
   overflow-wrap: anywhere;
   line-height: 1.5;
   padding: 10px 12px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-copy-link a svg {
   display: inline-block;
@@ -918,10 +918,10 @@
   align-items: center;
   gap: 6px;
   color: var(--admin-accent);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-error {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-error);
 }
 /* Photo upload */
@@ -958,7 +958,7 @@
   align-items: center;
   padding: 0 0 0 12px;
   color: var(--admin-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 400;
   white-space: nowrap;
 }
@@ -1008,7 +1008,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-category-meta span {
@@ -1031,12 +1031,12 @@
   border-radius: 8px;
 }
 .admin-order-summary dt {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-order-summary dd {
   margin: 4px 0 0;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
@@ -1067,7 +1067,7 @@
   background: none;
   color: var(--admin-ink);
   font: inherit;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
 }
 .admin-icon-text:hover {
@@ -1078,7 +1078,7 @@
 }
 .admin-order-checked {
   margin: 8px 0 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-order-toast {
@@ -1090,7 +1090,7 @@
   border-radius: 8px;
   background: var(--admin-ink);
   color: var(--admin-on-ink);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 .admin-order-fresh {
@@ -1113,7 +1113,7 @@
 }
 .admin-order-help {
   margin-top: 24px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-order-help summary {
@@ -1140,7 +1140,7 @@
   background: none;
   color: inherit;
   font: inherit;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
 }
 .admin-order-list {
@@ -1151,7 +1151,7 @@
 .admin-order {
   padding: 18px 0;
   border-bottom: 1px solid var(--admin-line);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-order-head {
   display: flex;
@@ -1160,14 +1160,14 @@
 }
 .admin-order-head strong {
   display: block;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 .admin-order-head span,
 .admin-order-head time {
   display: block;
   margin-top: 3px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--admin-muted);
 }
 .admin-order-total {
@@ -1298,7 +1298,7 @@
     padding: 8px 10px;
   }
   .admin-order-summary dd {
-    font-size: 15px;
+    font-size: 0.9375rem;
   }
   .admin-order-tools span {
     display: none;
@@ -1322,10 +1322,10 @@
     margin-bottom: 24px;
   }
   .admin-title-row h1 {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
   .admin-title-row p {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-title-row > .admin-primary {
     padding: 8px 10px;
@@ -1337,10 +1337,10 @@
     margin-bottom: 24px;
   }
   .admin-signin h2 {
-    font-size: 23px;
+    font-size: 1.4375rem;
   }
   .admin-signin p {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-primary,
   .admin-secondary {
@@ -1384,10 +1384,10 @@
     height: 65px;
   }
   .admin-dish-identity strong {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-dish-identity span {
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
   .admin-dish-price {
     grid-column: 2;
@@ -1397,7 +1397,7 @@
   .admin-availability {
     grid-column: 2;
     grid-row: 2;
-    font-size: 11px !important;
+    font-size: 0.6875rem !important;
     justify-content: flex-end;
     min-height: 32px;
     gap: 5px;
@@ -1430,18 +1430,18 @@
     padding: 15px;
   }
   .admin-item-preview h2 {
-    font-size: 20px;
+    font-size: 1.25rem;
     margin: 7px 0;
   }
   .admin-item-preview p {
     display: none;
   }
   .admin-item-preview strong {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-preview-label,
   .admin-preview-status {
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
   .admin-edit-fields {
     width: 100%;
@@ -1456,7 +1456,7 @@
   .admin-field input,
   .admin-field textarea,
   .admin-field select {
-    font-size: 16px;
+    font-size: 1rem;
     min-height: 44px;
   }
   .admin-field-pair {
@@ -1494,10 +1494,10 @@
     width: 100%;
   }
   .admin-qr-settings h2 {
-    font-size: 26px;
+    font-size: 1.625rem;
   }
   .admin-qr-settings > p:first-of-type {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-qr-preview {
     padding: 24px;
@@ -1507,7 +1507,7 @@
   }
   .admin-qr-actions button {
     flex: 1;
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .admin-message-error button {
     min-height: 40px;
@@ -1541,7 +1541,7 @@
 
 .admin-sidebar-bottom > a.admin-signout {
   display: inline-block;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: 15px 0 0 42px;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -1556,7 +1556,7 @@
   margin-inline-start: 8px;
   padding: 2px 8px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   vertical-align: 2px;
   background: var(--admin-active);
@@ -1615,10 +1615,10 @@
 }
 .admin-signin-form .admin-notice {
   margin: 0 0 14px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .admin-code-input {
-  font-size: 22px !important;
+  font-size: 1.375rem !important;
   letter-spacing: 8px;
   font-variant-numeric: tabular-nums;
 }
