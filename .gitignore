@@ -46,7 +46,7 @@ yarn-error.log*
 /.taste-skill/
 
 # Personal Claude Code settings
-/.claude/settings.local.json
+/.claude/
 
 # GitHub Pages demo build
 /demo-dist/
